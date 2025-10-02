@@ -24,5 +24,5 @@ export interface Recipe {
   createdAt: number;
 }
 
-export type DietaryFilter = 'all' | 'vegetarian' | 'vegan' | 'gluten-free' | 'dairy-free';
+export type DietaryFilter = 'all' | 'vegetarian' | 'vegan' | 'gluten-free' | 'Dairy Food';
 export type DifficultyFilter = 'all' | 'easy' | 'medium' | 'hard';

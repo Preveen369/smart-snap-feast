@@ -1,12 +1,14 @@
 import { useState } from 'react';
-import { Plus, Trash2, Sparkles } from 'lucide-react';
+import { Plus, Trash2, Sparkles, Package, Leaf } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Badge } from '@/components/ui/badge';
 import { Ingredient, Recipe } from '@/types/recipe';
 import { toast } from 'sonner';
+import { aiService } from '@/services/ai';
 
 interface IngredientScannerProps {
   ingredients: Ingredient[];
@@ -23,8 +25,8 @@ export function IngredientScanner({ ingredients, onAddIngredient, onRemoveIngred
   const [isGenerating, setIsGenerating] = useState(false);
 
   const dietaryOptions = [
-    'vegetarian', 'vegan', 'gluten-free', 'dairy-free', 
-    'keto', 'paleo', 'low-carb', 'high-protein'
+    'vegetarian', 'vegan', 'gluten-free', 'Dairy Food', 
+    'keto', 'Non-Veg', 'low-carb', 'high-protein'
   ];
 
   const handleAdd = () => {
@@ -54,64 +56,46 @@ export function IngredientScanner({ ingredients, onAddIngredient, onRemoveIngred
     }
   };
 
-  const generateMockRecipe = () => {
+
+
+  const generateRecipe = async () => {
     if (ingredients.length === 0) {
       toast.error('Add some ingredients first!');
       return;
     }
 
     setIsGenerating(true);
-    
-    setTimeout(() => {
-      const selectedIngredients = ingredients.slice(0, Math.min(6, ingredients.length));
-      
-      const mockRecipe: Recipe = {
-        id: Date.now().toString(),
-        title: 'Cheesy Potato Patties with Soy Mayo Drizzle',
-        description: 'Crispy on the outside and cheesy on the inside, these vegetarian potato patties are paired perfectly with a tangy soy mayo drizzle.',
-        image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=800&q=80',
-        cookTime: 20,
-        difficulty: 'medium',
-        servings: 4,
-        ingredients: [
-          { name: '2 large potatoes', quantity: '2', unit: 'large' },
-          { name: 'cheddar cheese, grated', quantity: '1', unit: 'cup' },
-          { name: 'soy sauce', quantity: '2', unit: 'tablespoons' },
-          { name: 'mayonnaise', quantity: '3', unit: 'tablespoons' },
-          { name: 'tomato ketchup', quantity: '2', unit: 'tablespoons' },
-          { name: 'vegetable oil (for frying)', quantity: '1', unit: 'tablespoon' }
-        ],
-        instructions: [
-          'Squeeze excess moisture from the grated potatoes using a clean kitchen towel.',
-          'In a mixing bowl, combine the grated potatoes with the grated cheese.',
-          'Add 1 tablespoon of soy sauce to the potato and cheese mixture and mix well.',
-          'Form the mixture into small patties, about the size of the palm of your hand.',
-          'Heat the vegetable oil in a non-stick frying pan over medium heat.',
-          'Fry the patties for about 3-4 minutes on each side until golden brown and crispy.',
-          'While the patties are frying, prepare the drizzle by mixing 2 tablespoons of mayonnaise with 1 tablespoon of soy sauce and 2 tablespoons of tomato ketchup in a small bowl.',
-          'Once the patties are cooked, remove them from the pan and place them on a paper towel to remove excess oil.',
-          'Drizzle the soy mayo over the warm patties before serving.'
-        ],
-        dietaryTags: selectedDietary.length > 0 ? selectedDietary : ['vegetarian'],
-        createdAt: Date.now(),
-      };
 
-      onGenerateRecipe(mockRecipe);
+    try {
+      const maxTimeNum = parseInt(maxTime.replace(' min', ''));
+      const recipe = await aiService.generateRecipe(ingredients, {
+        dietaryRestrictions: selectedDietary,
+        maxTime: maxTimeNum,
+        difficulty: difficulty.toLowerCase() as 'easy' | 'medium' | 'hard',
+        servings: 4,
+      });
+
+      onGenerateRecipe(recipe);
+      toast.success('AI recipe generated successfully!');
+    } catch (error) {
+      console.error('Error generating recipe:', error);
+      toast.error('Failed to generate recipe. Please try again.');
+    } finally {
       setIsGenerating(false);
-      toast.success('Recipe generated!');
-    }, 1500);
+    }
   };
 
   return (
     <div className="space-y-6">
+
       <Card className="p-4">
         <div className="space-y-3">
-          <div className="flex items-center gap-2 text-orange-500">
-            <Plus className="h-5 w-5" />
-            <h2 className="text-lg font-semibold">My Pantry</h2>
+          <div className="flex items-center gap-2">
+            <Package className="h-5 w-5 text-orange-500" />
+            <h2 className="text-lg font-semibold text-black">My Pantry</h2>
           </div>
           <p className="text-sm text-muted-foreground">
-            Add ingredients you have available
+            Add ingredients manually or from AI scan
           </p>
 
           <div className="flex gap-2">
@@ -165,7 +149,10 @@ export function IngredientScanner({ ingredients, onAddIngredient, onRemoveIngred
         <div className="space-y-4">
           {/* Dietary Preferences Section */}
           <div className="space-y-3">
-            <h3 className="text-lg font-semibold">Dietary Preferences</h3>
+            <h3 className="text-lg font-semibold flex items-center gap-2">
+              <Leaf className="h-5 w-5 text-green-500" />
+              Dietary Preferences
+            </h3>
             <div className="grid grid-cols-2 gap-2">
               {dietaryOptions.map((option) => (
                 <div key={option} className="flex items-center space-x-2">
@@ -216,12 +203,12 @@ export function IngredientScanner({ ingredients, onAddIngredient, onRemoveIngred
             </div>
 
             <Button 
-              onClick={generateMockRecipe} 
+              onClick={generateRecipe} 
               disabled={isGenerating} 
               className="w-full bg-orange-500 hover:bg-orange-600"
             >
               <Sparkles className="mr-2 h-4 w-4" />
-              {isGenerating ? 'Generating...' : 'Generate Recipe'}
+              {isGenerating ? 'Generating...' : 'Generate AI Recipe'}
             </Button>
           </div>
         </div>

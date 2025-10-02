@@ -21,6 +21,10 @@ const Index = () => {
     setRecipes([recipe, ...recipes]);
   };
 
+  const handleDeleteRecipe = (recipeId: string) => {
+    setRecipes(recipes.filter(recipe => recipe.id !== recipeId));
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 pb-20">
       <div className="container mx-auto px-6 py-8">
@@ -50,6 +54,7 @@ const Index = () => {
               ingredients={ingredients}
               recipes={recipes}
               onGenerateRecipe={handleGenerateRecipe}
+              onDeleteRecipe={handleDeleteRecipe}
             />
           </div>
         </div>
