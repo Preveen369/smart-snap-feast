@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { ChefHat, Package } from 'lucide-react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { ChefHat } from 'lucide-react';
 import { IngredientScanner } from '@/components/IngredientScanner';
 import { RecipeGenerator } from '@/components/RecipeGenerator';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
@@ -23,41 +22,37 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background pb-20">
-      <div className="container mx-auto px-4 py-8">
-        <div className="mb-8 text-center">
-          <h1 className="text-4xl font-bold text-primary mb-2">Smart Snap Feast</h1>
-          <p className="text-muted-foreground">Create amazing recipes with what you have</p>
+    <div className="min-h-screen bg-gray-50 pb-20">
+      <div className="container mx-auto px-6 py-8">
+        <div className="mb-8">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center">
+              <ChefHat className="w-5 h-5 text-white" />
+            </div>
+            <div>
+              <h1 className="text-2xl font-bold text-foreground">Kitchen Wizard</h1>
+              <p className="text-sm text-muted-foreground">Smart recipes from your pantry</p>
+            </div>
+          </div>
         </div>
 
-        <Tabs defaultValue="pantry" className="w-full">
-          <TabsList className="grid w-full grid-cols-2 mb-8">
-            <TabsTrigger value="pantry" className="flex items-center gap-2">
-              <Package className="h-4 w-4" />
-              Pantry
-            </TabsTrigger>
-            <TabsTrigger value="recipes" className="flex items-center gap-2">
-              <ChefHat className="h-4 w-4" />
-              Recipes
-            </TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="pantry">
+        <div className="grid lg:grid-cols-[350px_1fr] gap-8">
+          <div>
             <IngredientScanner
               ingredients={ingredients}
               onAddIngredient={handleAddIngredient}
               onRemoveIngredient={handleRemoveIngredient}
+              onGenerateRecipe={handleGenerateRecipe}
             />
-          </TabsContent>
-
-          <TabsContent value="recipes">
+          </div>
+          <div>
             <RecipeGenerator
               ingredients={ingredients}
               recipes={recipes}
               onGenerateRecipe={handleGenerateRecipe}
             />
-          </TabsContent>
-        </Tabs>
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -9,6 +9,7 @@ export interface Ingredient {
 export interface Recipe {
   id: string;
   title: string;
+  description?: string;
   image?: string;
   cookTime: number;
   difficulty: 'easy' | 'medium' | 'hard';
