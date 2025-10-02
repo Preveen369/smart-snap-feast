@@ -485,7 +485,7 @@ ${instructionsList}
         <Dialog open={!!selectedRecipe} onOpenChange={() => setSelectedRecipe(null)}>
           <DialogContent className="max-w-4xl max-h-[85vh] overflow-y-auto">
             <DialogHeader className="pb-3">
-              <DialogTitle className="text-lg">{selectedRecipe.title}</DialogTitle>
+              <DialogTitle className="text-xl font-semibold">{selectedRecipe.title}</DialogTitle>
             </DialogHeader>
             
             <div className="space-y-4">
