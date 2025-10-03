@@ -1,73 +1,158 @@
-# Welcome to your Lovable project
+# Kitchen Wizard 🍳✨
 
-## Project info
+An intelligent recipe generator that transforms your pantry ingredients into delicious meals using AI-powered recipe generation and cooking guidance.
 
-**URL**: https://lovable.dev/projects/28314e68-908a-4b8b-8dd9-4706a7064620
+## ✨ Features
 
-## How can I edit this code?
+- **Smart Ingredient Management**: Easily add and manage ingredients from your pantry with manual input
+- **AI Recipe Generation**: Get personalized recipe suggestions based on your available ingredients
+- **Interactive Cooking Experience**: Step-by-step cooking mode with progress tracking and helpful tips
+- **Dietary Preferences**: Filter recipes by vegetarian, vegan, gluten-free, keto and other dietary requirements
+- **Recipe Customization**: Adjust servings, cooking time, and difficulty levels
+- **Recipe Sharing**: Share recipes via email, social media, or download as text files
+- **Modern UI**: Beautiful, responsive interface built with React and Tailwind CSS
+- **Error Handling**: Robust error boundaries to ensure smooth user experience
 
-There are several ways of editing your application.
+## 🚀 Tech Stack
 
-**Use Lovable**
+- **Frontend**: React 18 with TypeScript
+- **Build Tool**: Vite
+- **Styling**: Tailwind CSS + shadcn/ui components
+- **AI Integration**: OpenAI & Google Gemini APIs
+- **State Management**: React Hooks
+- **Package Manager**: Bun
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/28314e68-908a-4b8b-8dd9-4706a7064620) and start prompting.
+## 📦 Installation
 
-Changes made via Lovable will be committed automatically to this repo.
+1. **Clone the repository**
 
-**Use your preferred IDE**
+   ```bash
+   git clone https://github.com/Preveen369/smart-snap-feast.git
+   cd smart-snap-feast
+   ```
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+2. **Install dependencies**
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+   ```bash
+   bun install
+   # or
+   npm install
+   ```
 
-Follow these steps:
+3. **Set up environment variables**
+   Create a `.env` file in the root directory:
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+   ```env
+   VITE_OPENAI_API_KEY=your_openai_api_key_here
+   VITE_GEMINI_API_KEY=your_gemini_api_key_here
+   ```
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+   **Note**: OpenAI API key is required for recipe generation. Gemini API key is optional for enhanced features.
 
-# Step 3: Install the necessary dependencies.
-npm i
+4. **Start the development server**
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+   ```bash
+   bun dev
+   # or
+   npm run dev
+   ```
+
+5. **Open your browser**
+   Navigate to `http://localhost:8080`
+
+## 🎯 Usage
+
+1. **Add Ingredients**: Manually add ingredients from your pantry to the ingredient list
+2. **Set Preferences**: Choose dietary restrictions, cooking time, and difficulty level
+3. **Generate Recipe**: Let AI create personalized recipes based on your ingredients and preferences
+4. **Interactive Cooking**: Use the step-by-step cooking mode with tips and progress tracking
+5. **Share & Save**: Share your favorite recipes or save them for later
+
+## 📁 Project Structure
+
+```text
+kitchen-wizard/
+├── src/
+│   ├── components/          # React components
+│   │   ├── ui/             # shadcn/ui components
+│   │   ├── AIErrorBoundary.tsx     # Error handling component
+│   │   ├── IngredientScanner.tsx   # Manual ingredient input
+│   │   └── RecipeGenerator.tsx     # AI recipe generation & display
+│   ├── hooks/              # Custom React hooks (useAI, useLocalStorage)
+│   ├── lib/                # Utility functions
+│   ├── pages/              # Page components (Index, NotFound)
+│   ├── services/           # AI service integrations (OpenAI, Gemini)
+│   └── types/              # TypeScript type definitions
+├── public/                 # Static assets
+└── package.json
 ```
 
-**Edit a file directly in GitHub**
+## 🔧 Configuration
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+The app uses Vite for building and development. Key configuration files:
 
-**Use GitHub Codespaces**
+- `vite.config.ts` - Vite configuration
+- `tailwind.config.ts` - Tailwind CSS configuration  
+- `tsconfig.json` - TypeScript configuration
+- `components.json` - shadcn/ui configuration
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## 🤖 AI Services
 
-## What technologies are used for this project?
+This application integrates with multiple AI services:
 
-This project is built with:
+- **OpenAI**: For advanced recipe generation, cooking tips, and natural language processing
+- **Google Gemini**: For recipe image generation and enhanced cooking suggestions
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## 🛠️ Development
 
-## How can I deploy this project?
+### Available Scripts
 
-Simply open [Lovable](https://lovable.dev/projects/28314e68-908a-4b8b-8dd9-4706a7064620) and click on Share -> Publish.
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build
+- `npm run lint` - Run ESLint
 
-## Can I connect a custom domain to my Lovable project?
+### Adding New Components
 
-Yes, you can!
+This project uses shadcn/ui for components. To add new components:
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+```bash
+npx shadcn-ui@latest add [component-name]
+```
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+## 🚀 Deployment
+
+The app can be deployed to various platforms:
+
+- **Vercel**: Connect your GitHub repo for automatic deployments
+- **Netlify**: Drag and drop the `dist` folder after building
+- **GitHub Pages**: Use GitHub Actions for automated deployment
+
+Build the project:
+
+```bash
+npm run build
+```
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- [shadcn/ui](https://ui.shadcn.com/) for the beautiful UI components
+- [OpenAI](https://openai.com/) for powerful AI capabilities
+- [Google Gemini](https://ai.google.dev/) for advanced AI features
+- [Vite](https://vitejs.dev/) for the blazing fast build tool
+
+---
+
+## Happy Cooking! 👨‍🍳👩‍🍳
