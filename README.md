@@ -1,4 +1,4 @@
-# Kitchen Wizard 🍳✨
+# Smart-Snap-Feast: Kitchen Wizard 🍳✨
 
 An intelligent recipe generator that transforms your pantry ingredients into delicious meals using AI-powered recipe generation and cooking guidance.
 
