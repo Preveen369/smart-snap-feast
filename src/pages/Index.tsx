@@ -34,8 +34,8 @@ const Index = () => {
               <ChefHat className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-foreground">Kitchen Wizard</h1>
-              <p className="text-sm text-muted-foreground">Smart recipes from your pantry</p>
+              <h1 className="text-2xl font-bold text-foreground">Smart Snap Feast</h1>
+              <p className="text-sm text-muted-foreground">AI-powered cooking assistant for your kitchen</p>
             </div>
           </div>
         </div>
