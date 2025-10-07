@@ -1,6 +1,12 @@
 # Smart-Snap-Feast: Kitchen Wizard 🍳✨
 
-An intelligent recipe generator that transforms your pantry ingredients into delicious meals using AI-powered recipe generation and cooking guidance.
+![Frontend](https://img.shields.io/badge/Frontend-React-orange.svg)
+![Styling](https://img.shields.io/badge/Styles-Tailwind_CSS-blue.svg)
+![AI](https://img.shields.io/badge/AI-OpenAI,_Gemini_&_Chatbase-emerald.svg)
+![Build](https://img.shields.io/badge/Build-Vite-purple.svg)
+![License](https://img.shields.io/badge/License-MIT-lightgrey.svg)
+
+**Smart-Snap-Feast** is an AI-powered recipe generator that transforms your pantry ingredients into delicious, personalized meals. With a modern React-based UI, seamless AI integration, and a responsive design, it offers an interactive cooking experience tailored to your dietary preferences and cooking style.
 
 ## ✨ Features
 
