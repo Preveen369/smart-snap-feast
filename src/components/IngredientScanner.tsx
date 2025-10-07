@@ -1,3 +1,13 @@
+/**
+ * IngredientScanner - Interactive ingredient management and recipe generation component
+ * 
+ * Provides a comprehensive interface for managing ingredients and generating AI-powered recipes.
+ * Features manual ingredient input, dietary preference selection, cooking parameters,
+ * and intelligent recipe generation with custom AI-generated images.
+ * 
+ * @component
+ */
+
 import { useState } from 'react';
 import { Plus, Trash2, Sparkles, Package, Leaf } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -18,17 +28,26 @@ interface IngredientScannerProps {
 }
 
 export function IngredientScanner({ ingredients, onAddIngredient, onRemoveIngredient, onGenerateRecipe }: IngredientScannerProps) {
+  // Component state management for user input and preferences
   const [inputValue, setInputValue] = useState('');
   const [selectedDietary, setSelectedDietary] = useState<string[]>([]);
   const [difficulty, setDifficulty] = useState<string>('Easy');
   const [maxTime, setMaxTime] = useState<string>('15 min');
   const [isGenerating, setIsGenerating] = useState(false);
 
+  /**
+   * Available dietary restriction options for recipe filtering
+   * Includes common dietary preferences and restrictions
+   */
   const dietaryOptions = [
     'vegetarian', 'vegan', 'gluten-free', 'Dairy Food', 
     'keto', 'Non-Veg', 'low-carb', 'high-protein'
   ];
 
+  /**
+   * Handles adding a new ingredient to the pantry
+   * Creates a new ingredient object with unique ID and timestamp
+   */
   const handleAdd = () => {
     if (!inputValue.trim()) return;
 
@@ -42,12 +61,23 @@ export function IngredientScanner({ ingredients, onAddIngredient, onRemoveIngred
     setInputValue('');
   };
 
+  /**
+   * Handles Enter key press for quick ingredient addition
+   * Provides keyboard accessibility for the add ingredient feature
+   */
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
       handleAdd();
     }
   };
 
+  /**
+   * Manages dietary preference selection state
+   * Updates the selected dietary restrictions array based on user interaction
+   * 
+   * @param dietary - The dietary option being toggled
+   * @param checked - Whether the option is being selected or deselected
+   */
   const handleDietaryChange = (dietary: string, checked: boolean) => {
     if (checked) {
       setSelectedDietary([...selectedDietary, dietary]);
@@ -56,9 +86,18 @@ export function IngredientScanner({ ingredients, onAddIngredient, onRemoveIngred
     }
   };
 
-
-
+  /**
+   * Generates an AI-powered recipe based on selected ingredients and preferences
+   * 
+   * Orchestrates the entire recipe generation process including:
+   * - Input validation
+   * - AI service communication
+   * - Progress feedback with toast notifications
+   * - Error handling and user feedback
+   * - Success confirmation with appropriate messaging
+   */
   const generateRecipe = async () => {
+    // Validate that ingredients are available before proceeding
     if (ingredients.length === 0) {
       toast.error('Add some ingredients first!');
       return;
@@ -67,7 +106,17 @@ export function IngredientScanner({ ingredients, onAddIngredient, onRemoveIngred
     setIsGenerating(true);
 
     try {
+      // Parse time constraint from string format
       const maxTimeNum = parseInt(maxTime.replace(' min', ''));
+      
+      // Provide user feedback for longer operations (image generation)
+      setTimeout(() => {
+        if (isGenerating) {
+          toast.info('🎨 Generating recipe image with AI...');
+        }
+      }, 2000);
+
+      // Call AI service with user preferences and constraints
       const recipe = await aiService.generateRecipe(ingredients, {
         dietaryRestrictions: selectedDietary,
         maxTime: maxTimeNum,
@@ -76,7 +125,13 @@ export function IngredientScanner({ ingredients, onAddIngredient, onRemoveIngred
       });
 
       onGenerateRecipe(recipe);
-      toast.success('AI recipe generated successfully!');
+      
+      // Provide contextual success feedback based on generated content
+      if (recipe.image && recipe.image.startsWith('blob:')) {
+        toast.success('🎨 AI recipe with custom image generated successfully!');
+      } else {
+        toast.success('AI recipe generated successfully!');
+      }
     } catch (error) {
       console.error('Error generating recipe:', error);
       toast.error('Failed to generate recipe. Please try again.');
@@ -87,9 +142,10 @@ export function IngredientScanner({ ingredients, onAddIngredient, onRemoveIngred
 
   return (
     <div className="space-y-6">
-
+      {/* Pantry Management Section - Ingredient input and display */}
       <Card className="p-4">
         <div className="space-y-3">
+          {/* Section header with descriptive icon and title */}
           <div className="flex items-center gap-2">
             <Package className="h-5 w-5 text-orange-500" />
             <h2 className="text-lg font-semibold text-black">My Pantry</h2>
@@ -98,6 +154,7 @@ export function IngredientScanner({ ingredients, onAddIngredient, onRemoveIngred
             Add ingredients manually or from AI scan
           </p>
 
+          {/* Ingredient input controls with add button */}
           <div className="flex gap-2">
             <Input
               value={inputValue}
@@ -115,6 +172,7 @@ export function IngredientScanner({ ingredients, onAddIngredient, onRemoveIngred
             </Button>
           </div>
 
+          {/* Dynamic ingredient list display with empty state */}
           <div className="space-y-1">
             {ingredients.length === 0 ? (
               <div className="py-4 text-center">
@@ -145,14 +203,16 @@ export function IngredientScanner({ ingredients, onAddIngredient, onRemoveIngred
         </div>
       </Card>
 
+      {/* Recipe Generation Controls - Preferences and parameters */}
       <Card className="p-4">
         <div className="space-y-4">
-          {/* Dietary Preferences Section */}
+          {/* Dietary Preferences Selection Grid */}
           <div className="space-y-3">
             <h3 className="text-lg font-semibold flex items-center gap-2">
               <Leaf className="h-5 w-5 text-green-500" />
               Dietary Preferences
             </h3>
+            {/* Grid layout for dietary options with checkboxes */}
             <div className="grid grid-cols-2 gap-2">
               {dietaryOptions.map((option) => (
                 <div key={option} className="flex items-center space-x-2">
@@ -169,9 +229,11 @@ export function IngredientScanner({ ingredients, onAddIngredient, onRemoveIngred
             </div>
           </div>
 
-          {/* Recipe Generation Controls */}
+          {/* Recipe Generation Controls - Time and difficulty constraints */}
           <div className="space-y-3">
+            {/* Two-column grid for cooking parameters */}
             <div className="grid grid-cols-2 gap-3">
+              {/* Maximum cooking time selector */}
               <div>
                 <label className="text-sm font-medium text-foreground mb-1 block">Max Cook Time</label>
                 <Select value={maxTime} onValueChange={setMaxTime}>
@@ -187,6 +249,7 @@ export function IngredientScanner({ ingredients, onAddIngredient, onRemoveIngred
                 </Select>
               </div>
 
+              {/* Recipe difficulty level selector */}
               <div>
                 <label className="text-sm font-medium text-foreground mb-1 block">Difficulty</label>
                 <Select value={difficulty} onValueChange={setDifficulty}>
@@ -202,6 +265,7 @@ export function IngredientScanner({ ingredients, onAddIngredient, onRemoveIngred
               </div>
             </div>
 
+            {/* Primary action button for AI recipe generation */}
             <Button 
               onClick={generateRecipe} 
               disabled={isGenerating} 

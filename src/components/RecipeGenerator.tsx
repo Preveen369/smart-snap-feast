@@ -1,3 +1,13 @@
+/**
+ * RecipeGenerator - Comprehensive recipe management and interactive cooking component
+ * 
+ * Provides advanced recipe visualization, interactive cooking mode, ingredient tracking,
+ * step-by-step cooking guidance, sharing capabilities, and personalized cooking tips.
+ * Features both list and grid view modes for optimal user experience.
+ * 
+ * @component
+ */
+
 import { useState, useEffect } from 'react';
 import { ChefHat, Clock, Users, Trash2, List, Grid3X3, Sparkles, Star, CheckCircle2, AlertTriangle, Heart, Lightbulb, Award, Timer, TrendingUp, Utensils, Share2, Copy, Mail, MessageCircle, Facebook, Twitter, Download, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -6,6 +16,7 @@ import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { TipPersonalizationPanel } from '@/components/TipPersonalizationPanel';
 import { Recipe, Ingredient } from '@/types/recipe';
 import { aiService } from '@/services/ai';
 import { toast } from 'sonner';
@@ -18,116 +29,68 @@ interface RecipeGeneratorProps {
 }
 
 export function RecipeGenerator({ ingredients, recipes, onGenerateRecipe, onDeleteRecipe }: RecipeGeneratorProps) {
+  // Core component state management for recipe interaction
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
   const [servings, setServings] = useState<number>(4);
   const [viewMode, setViewMode] = useState<'list' | 'grid'>('list');
-  const [enhancements, setEnhancements] = useState<any>(null);
-  const [loadingEnhancements, setLoadingEnhancements] = useState(false);
-  const [completedTips, setCompletedTips] = useState<Set<string>>(new Set());
-  const [favoriteTips, setFavoriteTips] = useState<Set<string>>(new Set());
-  const [expandedTips, setExpandedTips] = useState<Set<string>>(new Set());
-  const [selectedTipCategory, setSelectedTipCategory] = useState<string>('all');
+  
+  // Interactive cooking state management
   const [checkedIngredients, setCheckedIngredients] = useState<Set<string>>(new Set());
   const [completedSteps, setCompletedSteps] = useState<Set<number>>(new Set());
   const [currentStep, setCurrentStep] = useState<number>(0);
-
   const [cookingMode, setCookingMode] = useState<boolean>(false);
   const [ingredientQuantityMultiplier, setIngredientQuantityMultiplier] = useState<number>(1);
+  
+  // UI state management for modals and sharing
   const [isShareModalOpen, setIsShareModalOpen] = useState<boolean>(false);
 
+  /**
+   * Handles recipe deletion with confirmation dialog
+   * 
+   * Provides user confirmation before deletion and manages cleanup
+   * of currently selected recipe if it matches the deleted one.
+   * 
+   * @param recipeId - Unique identifier of the recipe to delete
+   * @param recipeTitle - Title of the recipe for confirmation display
+   */
   const handleDeleteRecipe = (recipeId: string, recipeTitle: string) => {
     if (window.confirm(`Are you sure you want to delete "${recipeTitle}"?`)) {
       onDeleteRecipe(recipeId);
       toast.success('Recipe deleted successfully');
       
-      // Close modal if the deleted recipe is currently selected
+      // Cleanup: Close modal if the deleted recipe is currently selected
       if (selectedRecipe?.id === recipeId) {
         setSelectedRecipe(null);
       }
     }
   };
 
+  /**
+   * Handles recipe selection and initializes cooking session state
+   * 
+   * Resets all interactive cooking states when switching between recipes
+   * to provide a clean cooking experience for each recipe.
+   * 
+   * @param recipe - Recipe object to select and display
+   */
   const handleRecipeSelect = async (recipe: Recipe) => {
     setSelectedRecipe(recipe);
-    setEnhancements(null);
-    setLoadingEnhancements(true);
-    setCompletedTips(new Set());
-    setFavoriteTips(new Set());
-    setExpandedTips(new Set());
-    setSelectedTipCategory('all');
+    // Reset all cooking interaction states for new recipe
     setCheckedIngredients(new Set());
     setCompletedSteps(new Set());
     setCurrentStep(0);
-
     setCookingMode(false);
     setIngredientQuantityMultiplier(1);
-
-    try {
-      const recipeEnhancements = await aiService.getRecipeEnhancements(recipe);
-      setEnhancements(recipeEnhancements);
-    } catch (error) {
-      console.error('Error loading recipe enhancements:', error);
-      toast.error('Failed to load additional recipe information');
-    } finally {
-      setLoadingEnhancements(false);
-    }
   };
 
-  const toggleTipCompletion = (tipId: string) => {
-    const newCompleted = new Set(completedTips);
-    if (newCompleted.has(tipId)) {
-      newCompleted.delete(tipId);
-      toast.success('Tip unmarked as completed');
-    } else {
-      newCompleted.add(tipId);
-      toast.success('Great job! Tip marked as completed 🎉');
-    }
-    setCompletedTips(newCompleted);
-  };
-
-  const toggleTipFavorite = (tipId: string) => {
-    const newFavorites = new Set(favoriteTips);
-    if (newFavorites.has(tipId)) {
-      newFavorites.delete(tipId);
-      toast.success('Removed from favorites');
-    } else {
-      newFavorites.add(tipId);
-      toast.success('Added to favorites! ❤️');
-    }
-    setFavoriteTips(newFavorites);
-  };
-
-  const toggleTipExpansion = (tipId: string) => {
-    const newExpanded = new Set(expandedTips);
-    if (newExpanded.has(tipId)) {
-      newExpanded.delete(tipId);
-    } else {
-      newExpanded.add(tipId);
-    }
-    setExpandedTips(newExpanded);
-  };
-
-  const getDifficultyColor = (difficulty: string) => {
-    switch (difficulty) {
-      case 'beginner': return 'text-green-600 bg-green-100';
-      case 'intermediate': return 'text-yellow-600 bg-yellow-100';
-      case 'advanced': return 'text-red-600 bg-red-100';
-      default: return 'text-gray-600 bg-gray-100';
-    }
-  };
-
-  const getCategoryIcon = (category: string) => {
-    switch (category) {
-      case 'preparation': return <ChefHat className="h-4 w-4" />;
-      case 'cooking': return <Timer className="h-4 w-4" />;
-      case 'flavor': return <Sparkles className="h-4 w-4" />;
-      case 'storage': return <Users className="h-4 w-4" />;
-      case 'technique': return <TrendingUp className="h-4 w-4" />;
-      case 'presentation': return <Award className="h-4 w-4" />;
-      default: return <Lightbulb className="h-4 w-4" />;
-    }
-  };
-
+  /**
+   * Toggles ingredient check status in interactive ingredient list
+   * 
+   * Manages ingredient completion tracking with user feedback.
+   * Provides visual and toast notifications for user actions.
+   * 
+   * @param ingredientId - Unique identifier for the ingredient being toggled
+   */
   const toggleIngredientCheck = (ingredientId: string) => {
     const newChecked = new Set(checkedIngredients);
     if (newChecked.has(ingredientId)) {
@@ -140,6 +103,14 @@ export function RecipeGenerator({ ingredients, recipes, onGenerateRecipe, onDele
     setCheckedIngredients(newChecked);
   };
 
+  /**
+   * Toggles cooking step completion status with auto-progression
+   * 
+   * Manages step completion tracking and automatically advances
+   * to the next step when current step is completed in cooking mode.
+   * 
+   * @param stepIndex - Index of the cooking step being toggled
+   */
   const toggleStepCompletion = (stepIndex: number) => {
     const newCompleted = new Set(completedSteps);
     if (newCompleted.has(stepIndex)) {
@@ -148,7 +119,7 @@ export function RecipeGenerator({ ingredients, recipes, onGenerateRecipe, onDele
     } else {
       newCompleted.add(stepIndex);
       toast.success(`Step ${stepIndex + 1} completed! 🎉`);
-      // Auto-advance to next step
+      // Auto-advance to next step in cooking mode for seamless experience
       if (stepIndex === currentStep && stepIndex < (selectedRecipe?.instructions.length || 0) - 1) {
         setCurrentStep(stepIndex + 1);
       }
@@ -156,15 +127,32 @@ export function RecipeGenerator({ ingredients, recipes, onGenerateRecipe, onDele
     setCompletedSteps(newCompleted);
   };
 
-
-
+  /**
+   * Calculates adjusted ingredient quantities based on serving size and multiplier
+   * 
+   * Dynamically adjusts ingredient quantities based on user preferences
+   * for serving size modifications and quantity multipliers.
+   * 
+   * @param quantity - Original ingredient quantity as string
+   * @returns Adjusted quantity string or original if non-numeric
+   */
   const calculateAdjustedQuantity = (quantity: string) => {
     const numericQuantity = parseFloat(quantity);
     if (isNaN(numericQuantity)) return quantity;
     return (numericQuantity * ingredientQuantityMultiplier * (servings / (selectedRecipe?.servings || 4))).toFixed(1);
   };
 
+  /**
+   * Provides ingredient substitution suggestions for dietary preferences
+   * 
+   * Returns array of alternative ingredients for common cooking ingredients
+   * to accommodate dietary restrictions and ingredient availability.
+   * 
+   * @param ingredient - Name of the ingredient to find substitutions for
+   * @returns Array of substitute ingredient names
+   */
   const getIngredientSubstitutions = (ingredient: string) => {
+    // Comprehensive substitution database for common ingredients
     const substitutions: { [key: string]: string[] } = {
       'butter': ['coconut oil', 'olive oil', 'margarine'],
       'milk': ['almond milk', 'soy milk', 'oat milk'],
@@ -177,16 +165,27 @@ export function RecipeGenerator({ ingredients, recipes, onGenerateRecipe, onDele
     return substitutions[ingredient.toLowerCase()] || [];
   };
 
-  // Share recipe helper functions
+  /**
+   * Formats recipe data into shareable text format
+   * 
+   * Creates a comprehensive, formatted text representation of the recipe
+   * including all essential information for sharing across platforms.
+   * 
+   * @param recipe - Recipe object to format for sharing
+   * @returns Formatted recipe string ready for sharing
+   */
   const formatRecipeForSharing = (recipe: Recipe): string => {
+    // Format ingredients list with bullets for readability
     const ingredientsList = recipe.ingredients
       .map(ing => `• ${ing.quantity} ${ing.unit} ${ing.name}`)
       .join('\n');
     
+    // Format instructions with numbered steps
     const instructionsList = recipe.instructions
       .map((inst, i) => `${i + 1}. ${inst}`)
       .join('\n\n');
 
+    // Include dietary information if available
     const dietaryInfo = recipe.dietaryTags.length > 0 
       ? `\n🥗 Dietary: ${recipe.dietaryTags.join(', ')}`
       : '';
@@ -208,6 +207,14 @@ ${instructionsList}
 ✨ Created with Smart Snap Feast - AI-powered recipe generation!`;
   };
 
+  /**
+   * Copies formatted recipe text to user's clipboard
+   * 
+   * Utilizes modern clipboard API with error handling and user feedback
+   * through toast notifications for successful or failed operations.
+   * 
+   * @param text - Formatted recipe text to copy to clipboard
+   */
   const copyToClipboard = async (text: string) => {
     try {
       await navigator.clipboard.writeText(text);
@@ -217,6 +224,14 @@ ${instructionsList}
     }
   };
 
+  /**
+   * Opens email client with pre-formatted recipe content
+   * 
+   * Constructs mailto link with encoded recipe content for sharing
+   * via user's default email application.
+   * 
+   * @param recipe - Recipe object to share via email
+   */
   const shareViaEmail = (recipe: Recipe) => {
     const recipeText = formatRecipeForSharing(recipe);
     const subject = encodeURIComponent(`Check out this recipe: ${recipe.title}`);
@@ -224,29 +239,69 @@ ${instructionsList}
     window.open(`mailto:?subject=${subject}&body=${body}`);
   };
 
+  /**
+   * Opens SMS client with pre-formatted recipe content
+   * 
+   * Constructs SMS URI with encoded recipe content for sharing
+   * via user's default messaging application.
+   * 
+   * @param recipe - Recipe object to share via SMS
+   */
   const shareViaSMS = (recipe: Recipe) => {
     const recipeText = formatRecipeForSharing(recipe);
     const body = encodeURIComponent(`Check out this recipe: ${recipe.title}\n\n${recipeText}`);
     window.open(`sms:?body=${body}`);
   };
 
+  /**
+   * Opens WhatsApp with pre-formatted recipe content
+   * 
+   * Utilizes WhatsApp Web API to share formatted recipe content
+   * directly through WhatsApp messaging platform.
+   * 
+   * @param recipe - Recipe object to share via WhatsApp
+   */
   const shareViaWhatsApp = (recipe: Recipe) => {
     const recipeText = formatRecipeForSharing(recipe);
     const text = encodeURIComponent(recipeText);
     window.open(`https://wa.me/?text=${text}`);
   };
 
+  /**
+   * Opens Twitter with pre-formatted recipe tweet
+   * 
+   * Creates concise, engaging tweet content optimized for Twitter's
+   * character limit while including key recipe information.
+   * 
+   * @param recipe - Recipe object to share via Twitter
+   */
   const shareViaTwitter = (recipe: Recipe) => {
     const text = encodeURIComponent(`🍽️ Just discovered this amazing recipe: ${recipe.title}! ⏱️ ${recipe.cookTime} min | 👥 ${recipe.servings} servings | Created with Smart Snap Feast ✨`);
     window.open(`https://twitter.com/intent/tweet?text=${text}`);
   };
 
+  /**
+   * Opens Facebook with pre-formatted recipe sharing content
+   * 
+   * Utilizes Facebook's sharing API to create engaging social media
+   * posts with recipe information and app attribution.
+   * 
+   * @param recipe - Recipe object to share via Facebook
+   */
   const shareViaFacebook = (recipe: Recipe) => {
     const url = encodeURIComponent(window.location.href);
     const quote = encodeURIComponent(`Check out this delicious recipe: ${recipe.title}! Created with Smart Snap Feast.`);
     window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}&quote=${quote}`);
   };
 
+  /**
+   * Downloads recipe as formatted text file
+   * 
+   * Creates downloadable text file with complete recipe information
+   * using browser's download functionality with proper filename generation.
+   * 
+   * @param recipe - Recipe object to download as text file
+   */
   const downloadRecipe = (recipe: Recipe) => {
     const recipeText = formatRecipeForSharing(recipe);
     const blob = new Blob([recipeText], { type: 'text/plain' });
@@ -261,6 +316,14 @@ ${instructionsList}
     toast.success('Recipe downloaded successfully!');
   };
 
+  /**
+   * Central sharing method dispatcher
+   * 
+   * Routes sharing requests to appropriate platform-specific methods
+   * based on user selection from sharing modal interface.
+   * 
+   * @param method - Sharing method identifier (copy, email, sms, etc.)
+   */
   const handleShareRecipe = (method: string) => {
     if (!selectedRecipe) return;
 
@@ -293,7 +356,7 @@ ${instructionsList}
 
   return (
     <div className="space-y-6">
-      {/* Your Recipes Section */}
+      {/* Recipe Collection Display Section - List and Grid Views */}
       <div className="space-y-3">
         <div className="flex items-center justify-between">
           <div>
@@ -303,6 +366,7 @@ ${instructionsList}
             </h3>
             <p className="text-sm text-muted-foreground">Delicious recipes created just for you</p>
           </div>
+          {/* View Mode Toggle - Switch between list and grid layouts */}
           <div className="flex items-center gap-0.5 bg-gray-100 rounded-lg p-0.5">
             <Button
               variant="ghost"
@@ -331,6 +395,7 @@ ${instructionsList}
           </div>
         </div>
         
+        {/* Empty State Display */}
         {recipes.length === 0 ? (
           <Card className="p-6 text-center">
             <p className="text-muted-foreground text-sm">No recipes yet. Generate one to get started!</p>
@@ -338,6 +403,7 @@ ${instructionsList}
         ) : viewMode === 'list' ? (
           <div className="space-y-3">
             {recipes.map((recipe) => (
+              // Recipe List Item with comprehensive information display
               <Card key={recipe.id} className="overflow-hidden cursor-pointer hover:shadow-sm transition-all hover:border-orange-200" onClick={() => handleRecipeSelect(recipe)}>
                 <div className="flex gap-3 p-3">
                   <div className="relative w-20 h-20 rounded-md overflow-hidden bg-muted flex-shrink-0">
@@ -408,8 +474,10 @@ ${instructionsList}
             ))}
           </div>
         ) : (
+          // Recipe Grid Layout for visual browsing
           <div className="grid grid-cols-3 gap-2">
             {recipes.map((recipe) => (
+              // Compact Recipe Card for grid display
               <Card key={recipe.id} className="overflow-hidden cursor-pointer hover:shadow-sm transition-all hover:border-orange-200" onClick={() => handleRecipeSelect(recipe)}>
                 <div className="relative aspect-[4/3] w-full overflow-hidden bg-muted">
                   {recipe.image && (
@@ -480,7 +548,7 @@ ${instructionsList}
         )}
       </div>
 
-      {/* Recipe Detail Modal */}
+      {/* Interactive Recipe Detail Modal - Full cooking experience */}
       {selectedRecipe && (
         <Dialog open={!!selectedRecipe} onOpenChange={() => setSelectedRecipe(null)}>
           <DialogContent className="max-w-4xl max-h-[85vh] overflow-y-auto">
@@ -489,7 +557,7 @@ ${instructionsList}
             </DialogHeader>
             
             <div className="space-y-4">
-              {/* Recipe Image */}
+              {/* Hero Recipe Image Display */}
               <div className="aspect-[3/1] w-full overflow-hidden rounded-lg bg-muted relative">
                 {selectedRecipe.image && (
                   <img
@@ -500,11 +568,12 @@ ${instructionsList}
                 )}
               </div>
 
-              {/* Recipe Info */}
+              {/* Recipe Metadata and Description */}
               <p className="text-muted-foreground">
                 {selectedRecipe.description || 'A delicious recipe created with your ingredients.'}
               </p>
 
+              {/* Recipe Quick Stats Grid */}
               <div className="grid grid-cols-3 gap-3 p-3 bg-orange-50 rounded-lg">
                 <div className="text-center">
                   <div className="flex items-center justify-center gap-1 text-orange-600 mb-1">
@@ -526,6 +595,7 @@ ${instructionsList}
                 </div>
               </div>
 
+              {/* Tabbed Interface for Recipe Content and Tips */}
               <Tabs defaultValue="recipe" className="w-full">
                 <TabsList className="grid w-full grid-cols-2">
                   <TabsTrigger value="recipe">Recipe</TabsTrigger>
@@ -533,13 +603,14 @@ ${instructionsList}
                 </TabsList>
                 
                 <TabsContent value="recipe" className="space-y-4">
-                  {/* Interactive Ingredients */}
+                  {/* Interactive Ingredients Checklist Section */}
                   <div>
                     <div className="flex items-center justify-between mb-3">
                       <h4 className="font-medium text-base flex items-center gap-2">
                         🥘 Interactive Ingredients
                         <span className="text-sm text-muted-foreground">({checkedIngredients.size}/{selectedRecipe.ingredients.length})</span>
                       </h4>
+                      {/* Quantity Adjustment Controls */}
                       <div className="flex items-center gap-2">
                         <span className="text-xs text-muted-foreground">Adjust quantities:</span>
                         <div className="flex items-center bg-gray-100 rounded-lg p-0.5">
@@ -565,6 +636,7 @@ ${instructionsList}
                       </div>
                     </div>
                     
+                    {/* Dynamic Ingredient Checklist with Visual Feedback */}
                     <div className="space-y-2 bg-gradient-to-r from-gray-50 to-orange-50 p-4 rounded-lg border border-gray-200">
                       {selectedRecipe.ingredients.map((ingredient, index) => {
                         const ingredientId = `ingredient-${index}`;
@@ -601,6 +673,7 @@ ${instructionsList}
                         );
                       })}
                       
+                      {/* Completion Celebration Message */}
                       {checkedIngredients.size === selectedRecipe.ingredients.length && (
                         <div className="mt-4 p-3 bg-green-100 border border-green-300 rounded-lg text-center">
                           <span className="text-green-700 font-medium">🎉 All ingredients ready! Time to cook!</span>
@@ -609,13 +682,14 @@ ${instructionsList}
                     </div>
                   </div>
 
-                  {/* Interactive Instructions */}
+                  {/* Interactive Cooking Instructions Section */}
                   <div>
                     <div className="flex items-center justify-between mb-3">
                       <h4 className="font-medium text-base flex items-center gap-2">
                         👨‍🍳 Step-by-Step Instructions
                         <span className="text-sm text-muted-foreground">({completedSteps.size}/{selectedRecipe.instructions.length})</span>
                       </h4>
+                      {/* Cooking Mode Toggle for Focused Experience */}
                       <div className="flex items-center gap-2">
                         <Button
                           variant={cookingMode ? 'default' : 'outline'}
@@ -628,7 +702,7 @@ ${instructionsList}
                       </div>
                     </div>
                     
-                    {/* Progress Bar */}
+                    {/* Visual Progress Tracking Bar */}
                     <div className="mb-4 bg-gray-200 rounded-full h-2 overflow-hidden">
                       <div 
                         className="bg-gradient-to-r from-orange-400 to-orange-600 h-full transition-all duration-300 ease-out"
@@ -636,7 +710,7 @@ ${instructionsList}
                       />
                     </div>
                     
-                    {/* Current Step Highlight in Cooking Mode */}
+                    {/* Focused Current Step Display in Cooking Mode */}
                     {cookingMode && (
                       <div className="mb-4 p-4 bg-gradient-to-r from-orange-100 to-yellow-100 border border-orange-300 rounded-xl">
                         <div className="flex items-center gap-2 mb-2">
@@ -657,7 +731,7 @@ ${instructionsList}
                           </Button>
                         </div>
                         
-                        {/* Navigation */}
+                        {/* Step Navigation Controls */}
                         <div className="flex justify-between mt-3 pt-3 border-t border-orange-200">
                           <Button
                             variant="ghost"
@@ -681,6 +755,7 @@ ${instructionsList}
                       </div>
                     )}
                     
+                    {/* Complete Step-by-Step Instructions List */}
                     <div className="space-y-3">
                       {selectedRecipe.instructions.map((instruction, index) => {
                         const isCompleted = completedSteps.has(index);
@@ -753,6 +828,7 @@ ${instructionsList}
                         );
                       })}
                       
+                      {/* Recipe Completion Celebration */}
                       {completedSteps.size === selectedRecipe.instructions.length && (
                         <div className="mt-6 p-4 bg-gradient-to-r from-green-100 to-emerald-100 border border-green-300 rounded-xl text-center">
                           <div className="text-2xl mb-2">🎉</div>
@@ -764,286 +840,13 @@ ${instructionsList}
                   </div>
                 </TabsContent>
 
-
-
+                {/* Personalized Cooking Tips Tab */}
                 <TabsContent value="tips" className="space-y-6">
-                  {loadingEnhancements ? (
-                    <div className="text-center py-12">
-                      <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500"></div>
-                      <p className="text-sm text-muted-foreground mt-4">🧑‍🍳 Our AI chef is preparing personalized tips for you...</p>
-                    </div>
-                  ) : enhancements?.cookingTips ? (
-                    <div className="space-y-6">
-                      {/* Progress Header */}
-                      <div className="bg-gradient-to-r from-orange-50 to-yellow-50 p-4 rounded-xl border border-orange-200">
-                        <div className="flex items-center justify-between mb-3">
-                          <h5 className="font-semibold text-lg flex items-center gap-2">
-                            <Sparkles className="h-5 w-5 text-orange-500" />
-                            Interactive Cooking Tips
-                          </h5>
-                          <div className="flex items-center gap-2 text-sm">
-                            <CheckCircle2 className="h-4 w-4 text-green-500" />
-                            <span className="font-medium">{completedTips.size}</span>
-                            <span className="text-muted-foreground">completed</span>
-                          </div>
-                        </div>
-                        
-                        {/* Category Filter */}
-                        <div className="flex flex-wrap gap-2">
-                          {['all', 'preparation', 'cooking', 'flavor', 'technique'].map((category) => (
-                            <button
-                              key={category}
-                              onClick={() => setSelectedTipCategory(category)}
-                              className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
-                                selectedTipCategory === category
-                                  ? 'bg-orange-500 text-white shadow-sm'
-                                  : 'bg-white text-gray-600 hover:bg-orange-100 border'
-                              }`}
-                            >
-                              {category === 'all' ? 'All Tips' : category.charAt(0).toUpperCase() + category.slice(1)}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* General Tips */}
-                      {enhancements.cookingTips.generalTips && (
-                        <div className="space-y-3">
-                          <h6 className="font-medium text-base flex items-center gap-2 text-gray-700">
-                            <Lightbulb className="h-4 w-4 text-orange-500" />
-                            Essential Cooking Tips
-                          </h6>
-                          {enhancements.cookingTips.generalTips
-                            .filter((tip: any) => selectedTipCategory === 'all' || tip.category === selectedTipCategory)
-                            .map((tip: any, index: number) => {
-                              const tipId = `general-${index}`;
-                              const isCompleted = completedTips.has(tipId);
-                              const isFavorite = favoriteTips.has(tipId);
-                              const isExpanded = expandedTips.has(tipId);
-                              
-                              return (
-                                <div key={tipId} className={`group relative p-4 rounded-xl border-2 transition-all duration-200 ${
-                                  isCompleted 
-                                    ? 'bg-green-50 border-green-200 shadow-sm' 
-                                    : 'bg-white border-gray-200 hover:border-orange-200 hover:shadow-md'
-                                }`}>
-                                  <div className="flex items-start justify-between gap-3">
-                                    <div className="flex-1">
-                                      <div className="flex items-center gap-2 mb-2">
-                                        {getCategoryIcon(tip.category)}
-                                        <h5 className={`font-medium ${isCompleted ? 'line-through text-green-700' : 'text-gray-800'}`}>
-                                          {tip.title}
-                                        </h5>
-                                        <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${getDifficultyColor(tip.difficulty)}`}>
-                                          {tip.difficulty}
-                                        </span>
-                                        {tip.importance === 'high' && (
-                                          <Star className="h-3 w-3 text-yellow-500 fill-yellow-500" />
-                                        )}
-                                      </div>
-                                      
-                                      <p className={`text-sm leading-relaxed ${isCompleted ? 'text-green-600' : 'text-gray-600'} ${
-                                        !isExpanded ? 'line-clamp-2' : ''
-                                      }`}>
-                                        {tip.content}
-                                      </p>
-                                      
-                                      {tip.estimatedTime && (
-                                        <div className="flex items-center gap-1 mt-2 text-xs text-gray-500">
-                                          <Timer className="h-3 w-3" />
-                                          {tip.estimatedTime}
-                                        </div>
-                                      )}
-                                      
-                                      {tip.content.length > 100 && (
-                                        <button
-                                          onClick={() => toggleTipExpansion(tipId)}
-                                          className="text-xs text-orange-500 hover:text-orange-600 mt-1 font-medium"
-                                        >
-                                          {isExpanded ? 'Show less' : 'Show more'}
-                                        </button>
-                                      )}
-                                    </div>
-                                    
-                                    <div className="flex flex-col gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                                      <button
-                                        onClick={() => toggleTipCompletion(tipId)}
-                                        className={`p-1.5 rounded-full transition-colors ${
-                                          isCompleted 
-                                            ? 'text-green-600 bg-green-100 hover:bg-green-200' 
-                                            : 'text-gray-400 hover:text-green-500 hover:bg-green-50'
-                                        }`}
-                                        title={isCompleted ? 'Mark as incomplete' : 'Mark as complete'}
-                                      >
-                                        <CheckCircle2 className="h-4 w-4" />
-                                      </button>
-                                      <button
-                                        onClick={() => toggleTipFavorite(tipId)}
-                                        className={`p-1.5 rounded-full transition-colors ${
-                                          isFavorite 
-                                            ? 'text-red-500 bg-red-100 hover:bg-red-200' 
-                                            : 'text-gray-400 hover:text-red-500 hover:bg-red-50'
-                                        }`}
-                                        title={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
-                                      >
-                                        <Heart className={`h-4 w-4 ${isFavorite ? 'fill-current' : ''}`} />
-                                      </button>
-                                    </div>
-                                  </div>
-                                </div>
-                              );
-                            })}
-                        </div>
-                      )}
-
-                      {/* Pro Tips */}
-                      {enhancements.cookingTips.proTips && enhancements.cookingTips.proTips.length > 0 && (
-                        <div className="space-y-3">
-                          <h6 className="font-medium text-base flex items-center gap-2 text-gray-700">
-                            <Award className="h-4 w-4 text-purple-500" />
-                            Professional Chef Secrets
-                          </h6>
-                          {enhancements.cookingTips.proTips.map((tip: any, index: number) => {
-                            const tipId = `pro-${index}`;
-                            const isCompleted = completedTips.has(tipId);
-                            const isFavorite = favoriteTips.has(tipId);
-                            
-                            return (
-                              <div key={tipId} className={`group relative p-4 rounded-xl border-2 bg-gradient-to-r from-purple-50 to-indigo-50 ${
-                                isCompleted ? 'border-purple-300' : 'border-purple-200 hover:border-purple-300'
-                              } transition-all duration-200`}>
-                                <div className="flex items-start justify-between gap-3">
-                                  <div className="flex-1">
-                                    <div className="flex items-center gap-2 mb-2">
-                                      <Award className="h-4 w-4 text-purple-500" />
-                                      <h5 className={`font-medium ${isCompleted ? 'line-through text-purple-700' : 'text-gray-800'}`}>
-                                        {tip.title}
-                                      </h5>
-                                      <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-700">
-                                        Chef Secret
-                                      </span>
-                                    </div>
-                                    <p className={`text-sm leading-relaxed ${isCompleted ? 'text-purple-600' : 'text-gray-600'}`}>
-                                      {tip.content}
-                                    </p>
-                                  </div>
-                                  
-                                  <div className="flex flex-col gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <button
-                                      onClick={() => toggleTipCompletion(tipId)}
-                                      className={`p-1.5 rounded-full transition-colors ${
-                                        isCompleted 
-                                          ? 'text-purple-600 bg-purple-100 hover:bg-purple-200' 
-                                          : 'text-gray-400 hover:text-purple-500 hover:bg-purple-50'
-                                      }`}
-                                    >
-                                      <CheckCircle2 className="h-4 w-4" />
-                                    </button>
-                                    <button
-                                      onClick={() => toggleTipFavorite(tipId)}
-                                      className={`p-1.5 rounded-full transition-colors ${
-                                        isFavorite 
-                                          ? 'text-red-500 bg-red-100 hover:bg-red-200' 
-                                          : 'text-gray-400 hover:text-red-500 hover:bg-red-50'
-                                      }`}
-                                    >
-                                      <Heart className={`h-4 w-4 ${isFavorite ? 'fill-current' : ''}`} />
-                                    </button>
-                                  </div>
-                                </div>
-                              </div>
-                            );
-                          })}
-                        </div>
-                      )}
-
-                      {/* Common Mistakes */}
-                      {enhancements.cookingTips.commonMistakes && enhancements.cookingTips.commonMistakes.length > 0 && (
-                        <div className="space-y-3">
-                          <h6 className="font-medium text-base flex items-center gap-2 text-gray-700">
-                            <AlertTriangle className="h-4 w-4 text-amber-500" />
-                            Avoid These Common Mistakes
-                          </h6>
-                          {enhancements.cookingTips.commonMistakes.map((mistake: any, index: number) => (
-                            <div key={index} className="p-4 rounded-xl bg-amber-50 border border-amber-200">
-                              <div className="flex items-start gap-3">
-                                <AlertTriangle className="h-5 w-5 text-amber-500 flex-shrink-0 mt-0.5" />
-                                <div className="flex-1 space-y-2">
-                                  <div>
-                                    <span className="font-medium text-amber-800">Mistake: </span>
-                                    <span className="text-amber-700">{mistake.mistake}</span>
-                                  </div>
-                                  <div>
-                                    <span className="font-medium text-green-800">Solution: </span>
-                                    <span className="text-green-700">{mistake.solution}</span>
-                                  </div>
-                                  <div>
-                                    <span className="font-medium text-blue-800">Prevention: </span>
-                                    <span className="text-blue-700">{mistake.prevention}</span>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-
-                      {/* Flavor Pairings */}
-                      {enhancements.cookingTips.flavorPairings && enhancements.cookingTips.flavorPairings.length > 0 && (
-                        <div className="space-y-3">
-                          <h6 className="font-medium text-base flex items-center gap-2 text-gray-700">
-                            <Sparkles className="h-4 w-4 text-pink-500" />
-                            Perfect Flavor Combinations
-                          </h6>
-                          {enhancements.cookingTips.flavorPairings.map((pairing: any, index: number) => (
-                            <div key={index} className="p-4 rounded-xl bg-pink-50 border border-pink-200">
-                              <div className="flex items-start gap-3">
-                                <Sparkles className="h-5 w-5 text-pink-500 flex-shrink-0 mt-0.5" />
-                                <div className="flex-1">
-                                  <div className="flex items-center gap-2 mb-2">
-                                    <span className="font-medium text-pink-800 capitalize">{pairing.ingredient}</span>
-                                    <span className="text-pink-600">pairs beautifully with:</span>
-                                  </div>
-                                  <div className="flex flex-wrap gap-2 mb-2">
-                                    {pairing.pairs.map((pair: string, pairIndex: number) => (
-                                      <span key={pairIndex} className="px-2 py-1 bg-pink-100 text-pink-700 rounded-full text-sm font-medium">
-                                        {pair}
-                                      </span>
-                                    ))}
-                                  </div>
-                                  <p className="text-sm text-pink-700 italic">{pairing.why}</p>
-                                </div>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-
-                      {/* Completion Summary */}
-                      {completedTips.size > 0 && (
-                        <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-xl">
-                          <div className="flex items-center gap-2 text-green-700">
-                            <CheckCircle2 className="h-5 w-5" />
-                            <span className="font-medium">
-                              Great progress! You've completed {completedTips.size} tip{completedTips.size !== 1 ? 's' : ''}
-                            </span>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  ) : (
-                    <div className="text-center py-12 text-muted-foreground">
-                      <Sparkles className="h-16 w-16 mx-auto mb-4 opacity-30" />
-                      <p className="text-lg mb-2">No cooking tips available</p>
-                      <p className="text-sm">Our AI chef is still learning about this recipe!</p>
-                    </div>
-                  )}
+                  <TipPersonalizationPanel recipe={selectedRecipe} />
                 </TabsContent>
-
-
               </Tabs>
 
-              {/* Action Buttons */}
+              {/* Recipe Action Controls */}
               <div className="flex gap-3 pt-4 border-t">
                 <div className="flex items-center gap-2">
                   <span className="text-sm">Servings</span>
@@ -1073,7 +876,7 @@ ${instructionsList}
         </Dialog>
       )}
 
-      {/* Share Recipe Modal */}
+      {/* Comprehensive Recipe Sharing Modal */}
       {selectedRecipe && (
         <Dialog open={isShareModalOpen} onOpenChange={setIsShareModalOpen}>
           <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
@@ -1085,7 +888,7 @@ ${instructionsList}
             </DialogHeader>
             
             <div className="space-y-6">
-              {/* Recipe Card Display */}
+              {/* Recipe Preview Card for Sharing */}
               <div className="border rounded-lg p-4 bg-gray-50">
                 <div className="bg-white rounded-lg p-4 border shadow-sm">
                   <div className="flex items-start gap-3 mb-3">
@@ -1127,11 +930,11 @@ ${instructionsList}
                 </div>
               </div>
 
-              {/* Share Options */}
+              {/* Multi-Platform Sharing Options */}
               <div className="space-y-4">
                 <h4 className="font-medium text-gray-900">Share Options</h4>
                 
-                {/* Quick Actions */}
+                {/* Quick Copy and Download Actions */}
                 <div className="grid grid-cols-2 gap-3">
                   <Button
                     variant="outline"
@@ -1158,7 +961,7 @@ ${instructionsList}
                   </Button>
                 </div>
 
-                {/* Communication Apps */}
+                {/* Communication Platform Integration */}
                 <div className="space-y-2">
                   <h5 className="font-medium text-sm text-gray-700">Share via Apps</h5>
                   <div className="grid grid-cols-1 gap-2">
@@ -1200,7 +1003,7 @@ ${instructionsList}
                   </div>
                 </div>
 
-                {/* Social Media */}
+                {/* Social Media Platform Integration */}
                 <div className="space-y-2">
                   <h5 className="font-medium text-sm text-gray-700">Social Media</h5>
                   <div className="grid grid-cols-2 gap-2">
@@ -1230,7 +1033,7 @@ ${instructionsList}
                   </div>
                 </div>
 
-                {/* Native Share (if supported) */}
+                {/* Native Browser Sharing API Integration */}
                 {navigator.share && (
                   <Button
                     variant="outline"
