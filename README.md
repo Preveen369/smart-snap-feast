@@ -8,6 +8,8 @@
 
 **Smart-Snap-Feast** is an AI-powered recipe generator that transforms your pantry ingredients into delicious, personalized meals. With a modern React-based UI, seamless AI integration, and a responsive design, it offers an interactive cooking experience tailored to your dietary preferences and cooking style.
 
+---
+
 ## ✨ Core Features
 
 - **🥘 Smart Ingredient Management**: Add and manage pantry ingredients with intuitive input interface
@@ -21,6 +23,8 @@
 - **💬 AI Chatbot Integration**: Embedded cooking assistant via Chatbase for instant help
 - **🔧 TypeScript Integration**: Type-safe development with comprehensive error validation
 
+---
+
 ## 🚀 Tech Stack
 
 - **Frontend**: React 18 with TypeScript
@@ -31,6 +35,7 @@
 - **State Management**: React Hooks
 - **Package Manager**: Bun
 
+---
 
 ## 📦 Installation
 
@@ -73,6 +78,8 @@
 5. **Open your browser**
    Navigate to `http://localhost:8080`
 
+---
+
 ## 🎯 Usage
 
 1. **Add ingredients** — Add items from your pantry to the ingredient list.
@@ -80,6 +87,8 @@
 3. **Get smart tips & assistant** — Open Smart Cooking Tips for adaptive, recipe-specific guidance and use the Kitchen Wizard (Chatbase) chatbot for substitutions, nutrition info, troubleshooting, or step clarifications.
 4. **Cook interactively** — Follow step-by-step cooking mode with timers, progress tracking, and actionable tips.
 5. **Save & share** — Save recipes to your collection or share/export via email, socials, or download.
+
+---
 
 ## 📁 Project Structure
 
@@ -98,6 +107,8 @@ smart-snap-feast/
 └── README.md
 ```
 
+---
+
 ## 🔧 Configuration
 
 The app uses Vite for building and development. Key configuration files:
@@ -107,6 +118,8 @@ The app uses Vite for building and development. Key configuration files:
 - `tsconfig.json` - TypeScript configuration
 - `components.json` - shadcn/ui configuration
 
+---
+
 ## 🤖 AI Services
 
 This application integrates with multiple AI services:
@@ -114,6 +127,8 @@ This application integrates with multiple AI services:
 - **OpenAI**: For advanced recipe generation, cooking tips, and natural language processing
 - **Google Gemini**: For recipe image generation and enhanced cooking suggestions
 - **Chatbase**: For the embedded Kitchen Wizard chatbot — conversational assistance for ingredient substitutions, nutrition guidance, troubleshooting, and real‑time help
+
+---
 
 ## 🛠️ Development
 
@@ -132,6 +147,8 @@ This project uses shadcn/ui for components. To add new components:
 npx shadcn-ui@latest add [component-name]
 ```
 
+---
+
 ## 🚀 Deployment
 
 The app can be deployed to various platforms:
@@ -146,6 +163,8 @@ Build the project:
 npm run build
 ```
 
+---
+
 ## 🤝 Contributing
 
 1. Fork the repository
@@ -154,29 +173,13 @@ npm run build
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🙏 Acknowledgments
-
-- [shadcn/ui](https://ui.shadcn.com/) for the beautiful UI components
-- [OpenAI](https://openai.com/) for powerful AI capabilities
-- [Google Gemini](https://ai.google.dev/) for advanced AI features
-- [Vite](https://vitejs.dev/) for the blazing fast build tool
-
 ---
 
-## Happy Cooking! 👨‍🍳👩‍🍳
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
 
 ## 🙏 Acknowledgments
 
