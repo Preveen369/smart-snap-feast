@@ -1,7 +1,9 @@
 # Smart-Snap-Feast: Kitchen Wizard 🍳✨
 
+![Platform](https://img.shields.io/badge/Platform-Web-blue.svg)
 ![Frontend](https://img.shields.io/badge/Frontend-React-orange.svg)
-![Styling](https://img.shields.io/badge/Styles-Tailwind_CSS-blue.svg)
+![Language](https://img.shields.io/badge/Language-Typescript-red.svg)
+![Styling](https://img.shields.io/badge/Styles-Tailwind_CSS-aqua.svg)
 ![AI](https://img.shields.io/badge/AI-OpenAI,_Gemini_&_Chatbase-emerald.svg)
 ![Build](https://img.shields.io/badge/Build-Vite-purple.svg)
 ![License](https://img.shields.io/badge/License-MIT-lightgrey.svg)
