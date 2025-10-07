@@ -27,6 +27,18 @@
 
 ---
 
+## 📸 Screenshots
+
+Below are some screenshots showcasing the **EnlightenIt-Hub-App** interface:
+
+![Home Page](./screenshots/home_page_grid_view.png)
+
+![Recipe Card](./screenshots/recipe_card_view.png)
+
+![AI_Chatbot](/screenshots/ai_chatbot_view_1.png)
+
+---
+
 ## 🚀 Tech Stack
 
 - **Frontend**: React 18 with TypeScript
