@@ -12,7 +12,7 @@
 
 ---
 
-## ✨ Core Features
+## 🚀 Core Features
 
 - **🥘 Smart Ingredient Management**: Add and manage pantry ingredients with intuitive input interface
 - **🤖 AI Recipe Generation**: Multi-AI powered recipe creation using OpenAI & Google Gemini
@@ -39,7 +39,7 @@ Below are some screenshots showcasing the **EnlightenIt-Hub-App** interface:
 
 ---
 
-## 🚀 Tech Stack
+## 🛠️ Tech Stack
 
 - **Frontend**: React 18 with TypeScript
 - **Build Tool**: Vite
@@ -94,7 +94,7 @@ Below are some screenshots showcasing the **EnlightenIt-Hub-App** interface:
 
 ---
 
-## 🎯 Usage
+## 🧑‍💻 Usage
 
 1. **Add ingredients** — Add items from your pantry to the ingredient list.
 2. **Set preferences & generate** — Pick dietary needs, time, difficulty, then generate a personalized recipe.
@@ -163,7 +163,7 @@ npx shadcn-ui@latest add [component-name]
 
 ---
 
-## 🚀 Deployment
+## 🛫 Deployment
 
 The app can be deployed to various platforms:
 
@@ -189,18 +189,18 @@ npm run build
 
 ---
 
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
 ## 🙏 Acknowledgments
 
 - [shadcn/ui](https://ui.shadcn.com/) for the beautiful UI components
 - [OpenAI](https://openai.com/) for powerful AI capabilities
 - [Google Gemini](https://ai.google.dev/) for advanced AI features
 - [Vite](https://vitejs.dev/) for the blazing fast build tool
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
 
