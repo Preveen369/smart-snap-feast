@@ -56,19 +56,19 @@ interface RecipeGenerationOptions {
 export class OpenAIService {
   // Core service configuration and state management
   private apiKey: string;
-  private baseURL = import.meta.env.DEV ? '/api/openai' : 'https://api.openai.com/v1';
-  private rateLimitDelay = 1000; // Rate limiting: 1 second between requests for stability
+  private baseURL = 'https://api.groq.com/openai/v1';
+  private rateLimitDelay = 2000; // Increase to 2 seconds between requests
   private lastRequestTime = 0;
 
   /**
-   * Initializes OpenAI service with comprehensive environment validation
+   * Initializes OpenAI OSS service with help of GROQ API for comprehensive environment validation
    * 
    * Sets up API configuration, validates credentials, and provides detailed
    * debugging information for development and production environments.
    * Implements robust error detection and user-friendly messaging.
    */
   constructor() {
-    this.apiKey = import.meta.env.VITE_OPENAI_API_KEY || '';
+  this.apiKey = import.meta.env.VITE_GROQ_API_KEY || '';
     
     // Comprehensive environment debugging for development troubleshooting
     console.log('🔍 OpenAI Environment debug:', {
@@ -84,11 +84,11 @@ export class OpenAIService {
     
     // Validate API key configuration with specific error messaging
     if (!this.apiKey) {
-      console.error('❌ OpenAI API key not found. Set VITE_OPENAI_API_KEY in .env file.');
-    } else if (!this.apiKey.startsWith('sk-')) {
-      console.error('❌ Invalid OpenAI API key format. Key should start with "sk-"');
+      console.error('❌ Groq API key not found. Set GROQ_API_KEY in .env file.');
+    } else if (!this.apiKey.startsWith('gsk_')) {
+      console.error('❌ Invalid Groq API key format. Key should start with "gsk_"');
     } else {
-      console.log('✅ ChatGPT service initialized successfully');
+      console.log('✅ Groq Chat service initialized successfully');
     }
   }
 
@@ -98,7 +98,7 @@ export class OpenAIService {
    * @returns true if API key is properly configured for service usage
    */
   isConfigured(): boolean {
-    return !!(this.apiKey && this.apiKey.startsWith('sk-'));
+    return !!(this.apiKey && this.apiKey.startsWith('gsk_'));
   }
 
   /**
@@ -141,7 +141,7 @@ export class OpenAIService {
     });
 
     if (!this.isConfigured()) {
-      throw new Error('🔑 ChatGPT API key not configured. Please add VITE_OPENAI_API_KEY to your .env file.');
+  throw new Error('🔑 Groq API key not configured. Please add GROQ_API_KEY to your .env file.');
     }
 
     // Apply rate limiting for stable API performance
@@ -152,12 +152,10 @@ export class OpenAIService {
         'Content-Type': 'application/json',
       };
       
-      // Environment-aware authentication: proxy vs direct API access
-      if (!import.meta.env.DEV && this.apiKey) {
+      // Always use Authorization header for Groq
+      if (this.apiKey) {
         headers['Authorization'] = `Bearer ${this.apiKey}`;
-        console.log('📡 Using direct API call with auth header');
-      } else {
-        console.log('🔄 Using development proxy (no auth header needed)');
+        console.log('📡 Using Groq API call with auth header');
       }
       
       // Execute API request with optimized model configuration
@@ -165,7 +163,7 @@ export class OpenAIService {
         method: 'POST',
         headers,
         body: JSON.stringify({
-          model: 'gpt-4o-2024-08-06', // Latest GPT-4 Omni model for superior culinary content
+          model: 'openai/gpt-oss-20b',
           messages,
           temperature,
           max_tokens: 2000,
@@ -185,7 +183,7 @@ export class OpenAIService {
       const content = data.choices[0]?.message.content;
       
       if (!content) {
-        throw new Error('🤖 ChatGPT returned empty response. Please try again.');
+    throw new Error('🤖 Groq returned empty response. Please try again.');
       }
       
       return content;
@@ -193,7 +191,7 @@ export class OpenAIService {
       if (error instanceof Error) {
         throw error;
       }
-      throw new Error('🌐 Network error connecting to ChatGPT. Check your internet connection.');
+  throw new Error('🌐 Network error connecting to Groq. Check your internet connection.');
     }
   }
 
@@ -208,15 +206,15 @@ export class OpenAIService {
   private getErrorMessage(status: number, message?: string): string {
     switch (status) {
       case 401:
-        return '🔐 Invalid ChatGPT API key. Please check your VITE_OPENAI_API_KEY.';
+  return '🔐 Invalid Groq API key. Please check your GROQ_API_KEY.';
       case 429:
-        return '⏳ ChatGPT rate limit reached. Please wait a moment and try again.';
+  return '⏳ Groq rate limit reached. Please wait a moment and try again.';
       case 500:
       case 502:
       case 503:
-        return '🔧 ChatGPT service temporarily unavailable. Try again in a few minutes.';
+  return '🔧 Groq service temporarily unavailable. Try again in a few minutes.';
       default:
-        return `🤖 ChatGPT Error: ${message || 'Unknown error occurred'}`;
+  return `🤖 Groq Error: ${message || 'Unknown error occurred'}`;
     }
   }
 
@@ -281,17 +279,17 @@ ${dietaryRestrictions.length > 0 ? `• Dietary: ${dietaryRestrictions.join(', '
     ];
 
     try {
-      console.log('📤 Sending request to OpenAI...');
+  console.log('📤 Sending request to Groq...');
       const response = await this.makeRequest(messages, 0.8);
       
-      console.log('📥 Received response from OpenAI:', {
+  console.log('📥 Received response from Groq:', {
         hasResponse: !!response,
         responseLength: response ? response.length : 0,
         firstChars: response ? response.substring(0, 100) : 'none'
       });
       
       if (!response || response.trim().length === 0) {
-        throw new Error('🤖 ChatGPT returned empty response. Please try again.');
+        throw new Error('🤖 Groq returned empty response. Please try again.');
       }
       
       // Advanced JSON extraction and cleaning for web integration reliability
@@ -311,7 +309,7 @@ ${dietaryRestrictions.length > 0 ? `• Dietary: ${dietaryRestrictions.join(', '
         const lastBrace = cleanedResponse.lastIndexOf('}');
         
         if (firstBrace === -1 || lastBrace === -1) {
-          throw new Error('🔧 Invalid response format from ChatGPT. Please try again.');
+          throw new Error('🔧 Invalid response format from Groq. Please try again.');
         }
         
         cleanedResponse = cleanedResponse.substring(firstBrace, lastBrace + 1);
@@ -336,7 +334,7 @@ ${dietaryRestrictions.length > 0 ? `• Dietary: ${dietaryRestrictions.join(', '
       } catch (parseError) {
         console.error('❌ JSON parsing failed:', parseError);
         console.error('📄 Raw response:', response);
-        throw new Error('🔧 ChatGPT response format error. Please try generating again.');
+  throw new Error('🔧 Groq response format error. Please try generating again.');
       }
     } catch (error) {
       console.error('🚨 Recipe generation error:', error);
