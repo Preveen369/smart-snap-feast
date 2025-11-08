@@ -88,7 +88,7 @@ export default defineConfig(({ mode }) => {
           manualChunks: {
             'react-vendor': ['react', 'react-dom'],
             'ui-vendor': ['@radix-ui/react-dialog', '@radix-ui/react-select', '@radix-ui/react-tabs'],
-            'ai-services': ['./src/services/openai.ts', './src/services/gemini.ts', './src/services/ai.ts']
+            'ai-services': ['./src/services/openai.ts', './src/services/pollinations.ts', './src/services/ai.ts']
           }
         }
       }

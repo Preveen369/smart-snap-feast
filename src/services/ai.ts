@@ -1,7 +1,7 @@
 /**
  * AIService - Central orchestration layer for AI-powered recipe generation
  * 
- * Coordinates multiple AI providers (OpenAI, Gemini) to deliver comprehensive
+ * Coordinates multiple AI providers (OpenAI, Pollinations) to deliver comprehensive
  * recipe generation capabilities including content creation, image generation,
  * cooking tips, and recipe enhancements. Provides fallback mechanisms and
  * robust error handling for production reliability.
@@ -10,7 +10,7 @@
  */
 
 import { openaiService } from './openai';
-import { geminiService } from './gemini';
+import { pollinationsService } from './pollinations';
 import { Recipe, Ingredient } from '@/types/recipe';
 
 /**
@@ -32,7 +32,7 @@ export class AIService {
    * Generates a complete recipe with AI-powered content and image
    * 
    * Orchestrates the full recipe generation pipeline including content creation
-   * via OpenAI, image generation via Gemini, and comprehensive error handling.
+   * via OpenAI, image generation via Pollinations, and comprehensive error handling.
    * Provides detailed logging and user-friendly error messages for web interface.
    * 
    * @param ingredients - Array of ingredient objects to base recipe on
@@ -87,15 +87,15 @@ export class AIService {
       const formattedRecipe = this.formatRecipe(openaiRecipe, 'chatgpt');
       console.log('✅ Recipe formatted and ready:', formattedRecipe.title);
       
-      // Enhance recipe with AI-generated image via Gemini
+      // Enhance recipe with AI-generated image via Pollinations
       try {
         const ingredientNames = ingredients.map(ing => ing.name);
-        console.log('🎨 Generating Gemini image for recipe...');
-        const geminiImage = await this.generateRecipeImage(formattedRecipe.title, ingredientNames);
-        formattedRecipe.image = geminiImage;
-        console.log('✅ Gemini image generated and attached to recipe');
+        console.log('🎨 Generating Pollinations image for recipe...');
+        const pollinationsImage = await this.generateRecipeImage(formattedRecipe.title, ingredientNames);
+        formattedRecipe.image = pollinationsImage;
+        console.log('✅ Pollinations image generated and attached to recipe');
       } catch (error) {
-        console.warn('⚠️ Gemini image generation failed, keeping fallback image:', error);
+        console.warn('⚠️ Pollinations image generation failed, keeping fallback image:', error);
         // Recipe retains fallback image from formatRecipe method for graceful degradation
       }
       
@@ -140,7 +140,7 @@ export class AIService {
   }
 
   /**
-   * Generates AI-powered recipe images using Gemini with fallback handling
+   * Generates AI-powered recipe images using Pollinations with fallback handling
    * 
    * Creates visually appealing recipe images based on recipe content and ingredients.
    * Implements graceful degradation with curated fallback images when AI generation fails.
@@ -152,10 +152,10 @@ export class AIService {
    */
   async generateRecipeImage(recipeTitle: string, ingredients: string[], description?: string): Promise<string> {
     try {
-      console.log('🎨 Generating Gemini AI image for recipe:', recipeTitle);
-      return await geminiService.generateRecipeImage(recipeTitle, ingredients);
+      console.log('🎨 Generating Pollinations AI image for recipe:', recipeTitle);
+      return await pollinationsService.generateRecipeImage(recipeTitle, ingredients);
     } catch (error) {
-      console.warn('🖼️ Gemini image generation failed, using fallback:', error);
+      console.warn('🖼️ Pollinations image generation failed, using fallback:', error);
       return this.getFallbackImageUrl(recipeTitle, ingredients);
     }
   }
@@ -193,15 +193,15 @@ export class AIService {
 
     // Enhancement: Generate AI image asynchronously without blocking UI
     if (options.onImageGenerated) {
-      // Execute Gemini image generation in background for progressive enhancement
+      // Execute Pollinations image generation in background for progressive enhancement
       setTimeout(async () => {
         try {
-          console.log('🎨 Starting async Gemini image generation...');
-          const geminiImage = await this.generateRecipeImage(recipe.title, ingredientNames);
-          console.log('✅ Async Gemini image generated successfully');
-          options.onImageGenerated!(recipe.id, geminiImage);
+          console.log('🎨 Starting async Pollinations image generation...');
+          const pollinationsImage = await this.generateRecipeImage(recipe.title, ingredientNames);
+          console.log('✅ Async Pollinations image generated successfully');
+          options.onImageGenerated!(recipe.id, pollinationsImage);
         } catch (error) {
-          console.warn('⚠️ Async Gemini image generation failed, keeping fallback:', error);
+          console.warn('⚠️ Async Pollinations image generation failed, keeping fallback:', error);
           // Maintain existing fallback image for consistent user experience
           options.onImageGenerated!(recipe.id, recipe.image);
         }
@@ -421,4 +421,6 @@ export class AIService {
 export const aiService = new AIService();
 
 // Export individual AI service providers for specialized direct access when needed
-export { openaiService, geminiService };
+export { openaiService, pollinationsService };
+// Export geminiService for backward compatibility
+export const geminiService = pollinationsService;
