@@ -143,7 +143,7 @@ export function IngredientScanner({ ingredients, onAddIngredient, onRemoveIngred
   return (
     <div className="space-y-4 sm:space-y-6">
       {/* Pantry Management Section - Ingredient input and display */}
-      <Card className="p-3 sm:p-4">m:p-4">
+      <Card className="p-3 sm:p-4">
         <div className="space-y-3">
           {/* Section header with descriptive icon and title */}
           <div className="flex items-center gap-2">
@@ -213,7 +213,7 @@ export function IngredientScanner({ ingredients, onAddIngredient, onRemoveIngred
               Dietary Preferences
             </h3>
             {/* Grid layout for dietary options with checkboxes */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2">-cols-2 gap-2 sm:gap-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2">
               {dietaryOptions.map((option) => (
                 <div key={option} className="flex items-center space-x-2">
                   <Checkbox 
