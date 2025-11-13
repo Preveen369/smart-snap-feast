@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <!-- Chef Hat Icon for Smart Snap Feast -->
+  <defs>
+    <linearGradient id="hatGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#f97316;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ea580c;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Hat Base -->
+  <path d="M 12 44 L 12 48 Q 12 52 16 52 L 48 52 Q 52 52 52 48 L 52 44 Z" fill="url(#hatGradient)"/>
+  
+  <!-- Hat Top -->
+  <path d="M 32 8 Q 26 8 22 12 Q 18 10 14 12 Q 10 14 10 18 Q 10 22 12 24 L 12 44 L 52 44 L 52 24 Q 54 22 54 18 Q 54 14 50 12 Q 46 10 42 12 Q 38 8 32 8 Z" fill="url(#hatGradient)"/>
+  
+  <!-- Hat Highlights -->
+  <ellipse cx="32" cy="16" rx="8" ry="10" fill="#fff" opacity="0.2"/>
+  <ellipse cx="20" cy="20" rx="4" ry="5" fill="#fff" opacity="0.15"/>
+  <ellipse cx="44" cy="20" rx="4" ry="5" fill="#fff" opacity="0.15"/>
+  
+  <!-- Hat Band Detail -->
+  <rect x="12" y="42" width="40" height="2" fill="#fff" opacity="0.3"/>
+</svg>
