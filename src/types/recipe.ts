@@ -39,6 +39,7 @@ export interface Ingredient {
  * 
  * @interface Recipe
  * @property id - Unique recipe identifier for database operations and UI state
+ * @property firebaseId - Optional Firebase Firestore document ID for cloud sync
  * @property title - Recipe name optimized for search and display
  * @property description - Optional marketing description for user engagement
  * @property image - Optional visual representation (URL or base64 data)
@@ -52,6 +53,7 @@ export interface Ingredient {
  */
 export interface Recipe {
   id: string;
+  firebaseId?: string;
   title: string;
   description?: string;
   image?: string;

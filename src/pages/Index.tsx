@@ -1,13 +1,26 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ChefHat } from 'lucide-react';
 import { IngredientScanner } from '@/components/IngredientScanner';
 import { RecipeGenerator } from '@/components/RecipeGenerator';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
+import { useRecipes } from '@/hooks/useFirebase';
 import { Ingredient, Recipe } from '@/types/recipe';
+import { toast } from 'sonner';
 
 const Index = () => {
+  // Use a consistent user ID (in production, this would come from authentication)
+  const USER_ID = 'demo-user-001';
+  
   const [ingredients, setIngredients] = useLocalStorage<Ingredient[]>('pantry-ingredients', []);
   const [recipes, setRecipes] = useLocalStorage<Recipe[]>('generated-recipes', []);
+  
+  // Firebase hooks for cloud storage
+  const { 
+    recipes: firebaseRecipes, 
+    addRecipe: saveToFirebase, 
+    deleteRecipe: deleteFromFirebase,
+    loading: firebaseLoading 
+  } = useRecipes(USER_ID);
 
   const handleAddIngredient = (ingredient: Ingredient) => {
     setIngredients([...ingredients, ingredient]);
@@ -17,12 +30,69 @@ const Index = () => {
     setIngredients(ingredients.filter(ing => ing.id !== id));
   };
 
-  const handleGenerateRecipe = (recipe: Recipe) => {
-    setRecipes([recipe, ...recipes]);
+  const handleGenerateRecipe = async (recipe: Recipe) => {
+    try {
+      // Save to Firebase first to get the Firebase ID
+      const firebaseRecipe = {
+        title: recipe.title,
+        description: recipe.description,
+        image: recipe.image,
+        cookTime: recipe.cookTime,
+        difficulty: recipe.difficulty,
+        servings: recipe.servings,
+        ingredients: recipe.ingredients,
+        instructions: recipe.instructions,
+        dietaryTags: recipe.dietaryTags,
+        userId: USER_ID,
+      };
+      
+      const firebaseId = await saveToFirebase(firebaseRecipe);
+      
+      // Update the recipe with Firebase ID and save to local storage
+      const recipeWithFirebaseId = {
+        ...recipe,
+        firebaseId, // Store Firebase ID for easy deletion later
+      };
+      
+      setRecipes([recipeWithFirebaseId, ...recipes]);
+      toast.success('Recipe saved successfully! ☁️');
+    } catch (error) {
+      console.error('Failed to save recipe to Firebase:', error);
+      // Still save to local storage even if Firebase fails
+      setRecipes([recipe, ...recipes]);
+      toast.error('Recipe saved locally, but cloud sync failed');
+    }
   };
 
-  const handleDeleteRecipe = (recipeId: string) => {
-    setRecipes(recipes.filter(recipe => recipe.id !== recipeId));
+  const handleDeleteRecipe = async (recipeId: string) => {
+    try {
+      // Find the recipe to delete
+      const recipeToDelete = recipes.find(r => r.id === recipeId);
+      
+      // Delete from local storage
+      setRecipes(recipes.filter(recipe => recipe.id !== recipeId));
+      
+      // Delete from Firebase using the stored firebaseId
+      if (recipeToDelete?.firebaseId) {
+        await deleteFromFirebase(recipeToDelete.firebaseId);
+        toast.success('Recipe deleted successfully! 🗑️');
+      } else if (recipeToDelete) {
+        // Fallback: Try to find by matching title and userId
+        const firebaseRecipe = firebaseRecipes.find(
+          r => r.title === recipeToDelete.title && r.userId === USER_ID
+        );
+        
+        if (firebaseRecipe?.id) {
+          await deleteFromFirebase(firebaseRecipe.id);
+          toast.success('Recipe deleted successfully! 🗑️');
+        } else {
+          toast.success('Recipe removed from local storage');
+        }
+      }
+    } catch (error) {
+      console.error('Failed to delete recipe:', error);
+      toast.error('Failed to delete recipe from cloud');
+    }
   };
 
   return (
@@ -35,7 +105,10 @@ const Index = () => {
             </div>
             <div>
               <h1 className="text-2xl font-bold text-foreground">Smart Snap Feast</h1>
-              <p className="text-sm text-muted-foreground">AI-powered cooking assistant for your kitchen</p>
+              <p className="text-sm text-muted-foreground">
+                AI-powered cooking assistant for your kitchen
+                {firebaseLoading && ' • Syncing...'}
+              </p>
             </div>
           </div>
         </div>
