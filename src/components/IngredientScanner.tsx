@@ -181,7 +181,7 @@ export function IngredientScanner({ ingredients, onAddIngredient, onRemoveIngred
             ) : (
               ingredients.map((ingredient) => (
                 <div key={ingredient.id} className="flex items-center gap-2 sm:gap-3 p-2 sm:p-1.5 rounded hover:bg-muted/50">
-                  <Checkbox id={ingredient.id} defaultChecked className="h-4 w-4 sm:h-5 sm:w-5" />
+                  <Checkbox id={ingredient.id} defaultChecked className="h-2.5 w-2.5 sm:h-4 sm:w-4" />
                   <label 
                     htmlFor={ingredient.id} 
                     className="flex-1 text-xs sm:text-sm cursor-pointer"
@@ -220,7 +220,7 @@ export function IngredientScanner({ ingredients, onAddIngredient, onRemoveIngred
                     id={option}
                     checked={selectedDietary.includes(option)}
                     onCheckedChange={(checked) => handleDietaryChange(option, checked as boolean)}
-                    className="h-4 w-4 sm:h-5 sm:w-5"
+                    className="h-2.5 w-2.5 sm:h-4 sm:w-4"
                   />
                   <label htmlFor={option} className="text-xs sm:text-sm cursor-pointer capitalize">
                     {option.replace('-', ' ')}

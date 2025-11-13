@@ -552,7 +552,7 @@ ${instructionsList}
       {/* Interactive Recipe Detail Modal - Full cooking experience */}
       {selectedRecipe && (
         <Dialog open={!!selectedRecipe} onOpenChange={() => setSelectedRecipe(null)}>
-          <DialogContent className="max-w-[95vw] sm:max-w-[90vw] md:max-w-4xl max-h-[90vh] sm:max-h-[85vh] overflow-y-auto">
+          <DialogContent className="max-w-[98vw] sm:max-w-[95vw] md:max-w-[90vw] lg:max-w-4xl max-h-[95vh] sm:max-h-[90vh] overflow-y-auto p-3 sm:p-4 md:p-6">
             <DialogHeader className="pb-3">
               <DialogTitle className="text-lg sm:text-xl font-semibold pr-8">{selectedRecipe.title}</DialogTitle>
             </DialogHeader>
@@ -598,12 +598,12 @@ ${instructionsList}
 
               {/* Tabbed Interface for Recipe Content and Tips */}
               <Tabs defaultValue="recipe" className="w-full">
-                <TabsList className="grid w-full grid-cols-2">
-                  <TabsTrigger value="recipe">Recipe</TabsTrigger>
-                  <TabsTrigger value="tips">Tips</TabsTrigger>
+                <TabsList className="grid w-full grid-cols-2 h-auto p-0.5 sm:p-1">
+                  <TabsTrigger value="recipe" className="text-xs sm:text-sm py-1.5 sm:py-2">Recipe</TabsTrigger>
+                  <TabsTrigger value="tips" className="text-xs sm:text-sm py-1.5 sm:py-2">Tips</TabsTrigger>
                 </TabsList>
                 
-                <TabsContent value="recipe" className="space-y-4">
+                <TabsContent value="recipe" className="space-y-3 sm:space-y-4 mt-3 sm:mt-4">
                   {/* Interactive Ingredients Checklist Section */}
                   <div>
                     <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-3 gap-2">
@@ -617,19 +617,19 @@ ${instructionsList}
                         <div className="flex items-center bg-gray-100 rounded-lg p-0.5">
                           <button
                             onClick={() => setIngredientQuantityMultiplier(0.5)}
-                            className={`px-2 py-1 text-xs rounded ${ingredientQuantityMultiplier === 0.5 ? 'bg-white shadow-sm' : 'hover:bg-gray-200'}`}
+                            className={`px-1.5 sm:px-2 py-0.5 sm:py-1 text-[10px] sm:text-xs rounded ${ingredientQuantityMultiplier === 0.5 ? 'bg-white shadow-sm' : 'hover:bg-gray-200'}`}
                           >
                             ½×
                           </button>
                           <button
                             onClick={() => setIngredientQuantityMultiplier(1)}
-                            className={`px-2 py-1 text-xs rounded ${ingredientQuantityMultiplier === 1 ? 'bg-white shadow-sm' : 'hover:bg-gray-200'}`}
+                            className={`px-1.5 sm:px-2 py-0.5 sm:py-1 text-[10px] sm:text-xs rounded ${ingredientQuantityMultiplier === 1 ? 'bg-white shadow-sm' : 'hover:bg-gray-200'}`}
                           >
                             1×
                           </button>
                           <button
                             onClick={() => setIngredientQuantityMultiplier(2)}
-                            className={`px-2 py-1 text-xs rounded ${ingredientQuantityMultiplier === 2 ? 'bg-white shadow-sm' : 'hover:bg-gray-200'}`}
+                            className={`px-1.5 sm:px-2 py-0.5 sm:py-1 text-[10px] sm:text-xs rounded ${ingredientQuantityMultiplier === 2 ? 'bg-white shadow-sm' : 'hover:bg-gray-200'}`}
                           >
                             2×
                           </button>
@@ -638,28 +638,28 @@ ${instructionsList}
                     </div>
                     
                     {/* Dynamic Ingredient Checklist with Visual Feedback */}
-                    <div className="space-y-2 bg-gradient-to-r from-gray-50 to-orange-50 p-4 rounded-lg border border-gray-200">
+                    <div className="space-y-1.5 sm:space-y-2 bg-gradient-to-r from-gray-50 to-orange-50 p-3 sm:p-4 rounded-lg border border-gray-200">
                       {selectedRecipe.ingredients.map((ingredient, index) => {
                         const ingredientId = `ingredient-${index}`;
                         const isChecked = checkedIngredients.has(ingredientId);
                         const substitutions = getIngredientSubstitutions(ingredient.name);
                         
                         return (
-                          <div key={index} className={`group relative p-3 rounded-lg border-2 transition-all duration-200 ${
+                          <div key={index} className={`group relative p-2 sm:p-3 rounded-lg border-2 transition-all duration-200 ${
                             isChecked 
                               ? 'bg-green-50 border-green-200 shadow-sm' 
                               : 'bg-white border-gray-200 hover:border-orange-200 hover:shadow-md'
                           }`}>
-                            <div className="flex items-center gap-3">
+                            <div className="flex items-center gap-2 sm:gap-3">
                               <button
                                 onClick={() => toggleIngredientCheck(ingredientId)}
-                                className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-colors ${
+                                className={`w-3.5 h-3.5 sm:w-5 sm:h-5 rounded border-2 flex items-center justify-center flex-shrink-0 transition-colors ${
                                   isChecked 
                                     ? 'bg-green-500 border-green-500 text-white' 
                                     : 'border-gray-300 hover:border-green-400'
                                 }`}
                               >
-                                {isChecked && <CheckCircle2 className="h-3 w-3" />}
+                                {isChecked && <CheckCircle2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />}
                               </button>
                               
                               <div className="flex-1">
@@ -676,7 +676,7 @@ ${instructionsList}
                       
                       {/* Completion Celebration Message */}
                       {checkedIngredients.size === selectedRecipe.ingredients.length && (
-                        <div className="mt-4 p-3 bg-green-100 border border-green-300 rounded-lg text-center">
+                        <div className="mt-3 sm:mt-4 p-2 sm:p-3 bg-green-100 border border-green-300 rounded-lg text-center">
                           <span className="text-green-700 font-medium text-xs sm:text-sm">🎉 All ingredients ready! Time to cook!</span>
                         </div>
                       )}
@@ -713,13 +713,13 @@ ${instructionsList}
                     
                     {/* Focused Current Step Display in Cooking Mode */}
                     {cookingMode && (
-                      <div className="mb-4 p-4 bg-gradient-to-r from-orange-100 to-yellow-100 border border-orange-300 rounded-xl">
+                      <div className="mb-3 sm:mb-4 p-3 sm:p-4 bg-gradient-to-r from-orange-100 to-yellow-100 border border-orange-300 rounded-xl">
                         <div className="flex items-center gap-2 mb-2">
-                          <span className="bg-orange-500 text-white px-2 py-1 rounded-full text-xs font-medium">
+                          <span className="bg-orange-500 text-white px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-medium">
                             Current: Step {currentStep + 1}
                           </span>
                         </div>
-                        <p className="font-medium text-gray-800">{selectedRecipe.instructions[currentStep]}</p>
+                        <p className="font-medium text-gray-800 text-xs sm:text-sm">{selectedRecipe.instructions[currentStep]}</p>
                         
                         <div className="flex items-center gap-2 mt-3">
                           <Button
@@ -733,14 +733,13 @@ ${instructionsList}
                         </div>
                         
                         {/* Step Navigation Controls */}
-                        <div className="flex justify-between mt-3 pt-3 border-t border-orange-200">
+                        <div className="flex justify-between mt-2 sm:mt-3 pt-2 sm:pt-3 border-t border-orange-200">
                           <Button
                             variant="ghost"
                             size="sm"
                             onClick={() => setCurrentStep(Math.max(0, currentStep - 1))}
                             disabled={currentStep === 0}
-                            className="text-xs"
-                          >
+                            className="text-[10px] sm:text-xs h-7 sm:h-8 px-2 sm:px-3">
                             ← Previous
                           </Button>
                           <Button
@@ -748,8 +747,7 @@ ${instructionsList}
                             size="sm"
                             onClick={() => setCurrentStep(Math.min(selectedRecipe.instructions.length - 1, currentStep + 1))}
                             disabled={currentStep === selectedRecipe.instructions.length - 1}
-                            className="text-xs"
-                          >
+                            className="text-[10px] sm:text-xs h-7 sm:h-8 px-2 sm:px-3">
                             Next →
                           </Button>
                         </div>
@@ -762,18 +760,18 @@ ${instructionsList}
                         const isCompleted = completedSteps.has(index);
                         const isCurrent = cookingMode && index === currentStep;
                         return (
-                          <div key={index} className={`group relative p-4 rounded-xl border-2 transition-all duration-200 ${
+                          <div key={index} className={`group relative p-3 sm:p-4 rounded-xl border-2 transition-all duration-200 ${
                             isCompleted 
                               ? 'bg-green-50 border-green-200 shadow-sm' 
                               : isCurrent
                               ? 'bg-orange-50 border-orange-300 shadow-md ring-2 ring-orange-200'
                               : 'bg-white border-gray-200 hover:border-orange-200 hover:shadow-md'
                           }`}>
-                            <div className="flex gap-3">
-                              <div className="relative">
+                            <div className="flex gap-2 sm:gap-3">
+                              <div className="relative flex-shrink-0">
                                 <button
                                   onClick={() => toggleStepCompletion(index)}
-                                  className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-colors ${
+                                  className={`w-5 h-5 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-[10px] sm:text-sm font-medium transition-colors ${
                                     isCompleted 
                                       ? 'bg-green-500 text-white' 
                                       : isCurrent
@@ -831,8 +829,8 @@ ${instructionsList}
                       
                       {/* Recipe Completion Celebration */}
                       {completedSteps.size === selectedRecipe.instructions.length && (
-                        <div className="mt-6 p-4 bg-gradient-to-r from-green-100 to-emerald-100 border border-green-300 rounded-xl text-center">
-                          <div className="text-2xl mb-2">🎉</div>
+                        <div className="mt-4 sm:mt-6 p-3 sm:p-4 bg-gradient-to-r from-green-100 to-emerald-100 border border-green-300 rounded-xl text-center">
+                          <div className="text-xl sm:text-2xl mb-1 sm:mb-2">🎉</div>
                           <h5 className="font-semibold text-green-800 mb-1 text-sm sm:text-base">Congratulations!</h5>
                           <p className="text-green-700 text-xs sm:text-sm">You've completed all cooking steps. Enjoy your delicious meal!</p>
                         </div>
@@ -842,17 +840,17 @@ ${instructionsList}
                 </TabsContent>
 
                 {/* Personalized Cooking Tips Tab */}
-                <TabsContent value="tips" className="space-y-6">
+                <TabsContent value="tips" className="space-y-4 sm:space-y-6 mt-3 sm:mt-4">
                   <TipPersonalizationPanel recipe={selectedRecipe} />
                 </TabsContent>
               </Tabs>
 
               {/* Recipe Action Controls */}
-              <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t">
+              <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 pt-3 sm:pt-4 border-t">
                 <div className="flex items-center gap-2">
-                  <span className="text-xs sm:text-sm">Servings</span>
+                  <span className="text-[10px] sm:text-xs md:text-sm">Servings</span>
                   <Select value={servings.toString()} onValueChange={(value) => setServings(parseInt(value))}>
-                    <SelectTrigger className="w-20">
+                    <SelectTrigger className="w-16 sm:w-20 h-8 sm:h-9 text-xs sm:text-sm">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -864,11 +862,11 @@ ${instructionsList}
                     </SelectContent>
                   </Select>
                 </div>
-                <Button className="bg-orange-500 hover:bg-orange-600 text-white text-sm sm:text-base">
+                <Button className="bg-orange-500 hover:bg-orange-600 text-white text-xs sm:text-sm h-8 sm:h-9 md:h-10">
                   Save Recipe
                 </Button>
-                <Button variant="outline" onClick={() => setIsShareModalOpen(true)} className="text-sm sm:text-base">
-                  <Share2 className="h-4 w-4 mr-2" />
+                <Button variant="outline" onClick={() => setIsShareModalOpen(true)} className="text-xs sm:text-sm h-8 sm:h-9 md:h-10">
+                  <Share2 className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
                   Share Recipe
                 </Button>
               </div>
@@ -880,7 +878,7 @@ ${instructionsList}
       {/* Comprehensive Recipe Sharing Modal */}
       {selectedRecipe && (
         <Dialog open={isShareModalOpen} onOpenChange={setIsShareModalOpen}>
-          <DialogContent className="max-w-[95vw] sm:max-w-[90vw] md:max-w-2xl max-h-[90vh] sm:max-h-[85vh] overflow-y-auto">
+          <DialogContent className="max-w-[98vw] sm:max-w-[95vw] md:max-w-[90vw] lg:max-w-2xl max-h-[95vh] sm:max-h-[90vh] overflow-y-auto p-3 sm:p-4 md:p-6">
             <DialogHeader className="pb-4">
               <DialogTitle className="text-base sm:text-lg flex items-center gap-2 pr-8">
                 <Share2 className="h-5 w-5 text-orange-500" />

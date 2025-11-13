@@ -222,7 +222,7 @@ export function TipPersonalizationPanel({ recipe, className }: TipPersonalizatio
       <Card key={tipId} className={`group relative transition-all duration-200 ${
         isCompleted ? 'bg-green-50 border-green-200 shadow-sm' : `${bgColor} ${borderColor} hover:shadow-md hover:border-blue-300`
       }`}>
-        <div className="p-4">
+        <div className="p-3 sm:p-4">
           <div className="flex items-start justify-between gap-3 mb-3">
             <div className="flex items-start gap-3 flex-1">
               <div className="mt-1">{icon}</div>
@@ -358,21 +358,21 @@ export function TipPersonalizationPanel({ recipe, className }: TipPersonalizatio
   return (
     <div className={`space-y-6 ${className}`}>
       {/* Enhanced header with progress tracking */}
-      <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-6 rounded-xl border border-blue-200">
-        <div className="flex items-center justify-between mb-4">
+      <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-3 sm:p-4 md:p-6 rounded-xl border border-blue-200">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 mb-4">
           <div>
-            <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
-              <Zap className="h-7 w-7 text-blue-500" />
+            <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 flex items-center gap-2 sm:gap-3">
+              <Zap className="h-5 w-5 sm:h-6 sm:h-6 md:h-7 md:w-7 text-blue-500" />
               Smart Cooking Tips
             </h2>
-            <p className="text-sm text-gray-600 mt-1">
+            <p className="text-xs sm:text-sm text-gray-600 mt-1">
               AI-powered, personalized guidance for "{recipe.title}"
             </p>
           </div>
           
           {/* User progress indicators */}
-          <div className="flex items-center gap-2 text-sm">
-            <CheckCircle2 className="h-4 w-4 text-green-500" />
+          <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm">
+            <CheckCircle2 className="h-3 w-3 sm:h-4 sm:w-4 text-green-500" />
             <span className="font-medium">{completedTips.size}</span>
             <span className="text-gray-600">completed</span>
             <Heart className="h-4 w-4 text-red-500 ml-3" />
@@ -384,19 +384,19 @@ export function TipPersonalizationPanel({ recipe, className }: TipPersonalizatio
 
       {/* Categorized tips interface with tabbed navigation */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-5">
-          <TabsTrigger value="recipe-tips" className="text-xs">Recipe Tips</TabsTrigger>
-          <TabsTrigger value="ingredients" className="text-xs">Ingredients</TabsTrigger>
-          <TabsTrigger value="flavor" className="text-xs">Flavor</TabsTrigger>
-          <TabsTrigger value="pitfalls" className="text-xs">Avoid Mistakes</TabsTrigger>
-          <TabsTrigger value="presentation" className="text-xs">Presentation</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-5 h-auto p-1">
+          <TabsTrigger value="recipe-tips" className="text-[9px] sm:text-[10px] md:text-xs px-1 sm:px-2 py-1.5 sm:py-2">Recipe Tips</TabsTrigger>
+          <TabsTrigger value="ingredients" className="text-[9px] sm:text-[10px] md:text-xs px-1 sm:px-2 py-1.5 sm:py-2">Ingredients</TabsTrigger>
+          <TabsTrigger value="flavor" className="text-[9px] sm:text-[10px] md:text-xs px-1 sm:px-2 py-1.5 sm:py-2">Flavor</TabsTrigger>
+          <TabsTrigger value="pitfalls" className="text-[9px] sm:text-[10px] md:text-xs px-1 sm:px-2 py-1.5 sm:py-2">Avoid</TabsTrigger>
+          <TabsTrigger value="presentation" className="text-[9px] sm:text-[10px] md:text-xs px-1 sm:px-2 py-1.5 sm:py-2">Present</TabsTrigger>
         </TabsList>
 
         {/* Recipe-specific cooking techniques and methods */}
-        <TabsContent value="recipe-tips" className="space-y-4">
-          <div className="flex items-center gap-2 mb-4">
-            <ChefHat className="h-5 w-5 text-blue-500" />
-            <h3 className="font-semibold text-lg">Recipe-Specific Tips</h3>
+        <TabsContent value="recipe-tips" className="space-y-3 sm:space-y-4">
+          <div className="flex items-center gap-2 mb-3 sm:mb-4">
+            <ChefHat className="h-4 w-4 sm:h-5 sm:w-5 text-blue-500" />
+            <h3 className="font-semibold text-sm sm:text-base md:text-lg">Recipe-Specific Tips</h3>
           </div>
           
           {dynamicTips.recipeTips && dynamicTips.recipeTips.length > 0 ? (
@@ -419,10 +419,10 @@ export function TipPersonalizationPanel({ recipe, className }: TipPersonalizatio
         </TabsContent>
 
         {/* Ingredient handling and preparation secrets */}
-        <TabsContent value="ingredients" className="space-y-4">
-          <div className="flex items-center gap-2 mb-4">
-            <Award className="h-5 w-5 text-purple-500" />
-            <h3 className="font-semibold text-lg">Ingredient Secrets</h3>
+        <TabsContent value="ingredients" className="space-y-3 sm:space-y-4">
+          <div className="flex items-center gap-2 mb-3 sm:mb-4">
+            <Award className="h-4 w-4 sm:h-5 sm:w-5 text-purple-500" />
+            <h3 className="font-semibold text-sm sm:text-base md:text-lg">Ingredient Secrets</h3>
           </div>
           
           {dynamicTips.ingredientSecrets && dynamicTips.ingredientSecrets.length > 0 ? (
@@ -445,10 +445,10 @@ export function TipPersonalizationPanel({ recipe, className }: TipPersonalizatio
         </TabsContent>
 
         {/* Flavor enhancement and seasoning guidance */}
-        <TabsContent value="flavor" className="space-y-4">
-          <div className="flex items-center gap-2 mb-4">
-            <Sparkles className="h-5 w-5 text-pink-500" />
-            <h3 className="font-semibold text-lg">Flavor Enhancers</h3>
+        <TabsContent value="flavor" className="space-y-3 sm:space-y-4">
+          <div className="flex items-center gap-2 mb-3 sm:mb-4">
+            <Sparkles className="h-4 w-4 sm:h-5 sm:w-5 text-pink-500" />
+            <h3 className="font-semibold text-sm sm:text-base md:text-lg">Flavor Enhancers</h3>
           </div>
           
           {dynamicTips.flavorEnhancers && dynamicTips.flavorEnhancers.length > 0 ? (
@@ -471,10 +471,10 @@ export function TipPersonalizationPanel({ recipe, className }: TipPersonalizatio
         </TabsContent>
 
         {/* Common cooking mistakes and prevention strategies */}
-        <TabsContent value="pitfalls" className="space-y-4">
-          <div className="flex items-center gap-2 mb-4">
-            <AlertTriangle className="h-5 w-5 text-amber-500" />
-            <h3 className="font-semibold text-lg">Avoid Common Pitfalls</h3>
+        <TabsContent value="pitfalls" className="space-y-3 sm:space-y-4">
+          <div className="flex items-center gap-2 mb-3 sm:mb-4">
+            <AlertTriangle className="h-4 w-4 sm:h-5 sm:w-5 text-amber-500" />
+            <h3 className="font-semibold text-sm sm:text-base md:text-lg">Avoid Common Pitfalls</h3>
           </div>
           
           {dynamicTips.commonPitfalls && dynamicTips.commonPitfalls.length > 0 ? (
@@ -489,32 +489,32 @@ export function TipPersonalizationPanel({ recipe, className }: TipPersonalizatio
                   <Card key={tipId} className={`group relative transition-all duration-200 ${
                     isCompleted ? 'bg-green-50 border-green-200' : 'bg-amber-50 border-amber-200 hover:shadow-md'
                   }`}>
-                    <div className="p-4">
+                    <div className="p-3 sm:p-4">
                       <div className="flex items-start justify-between gap-3">
-                        <div className="flex items-start gap-3 flex-1">
-                          <AlertTriangle className="h-5 w-5 text-amber-500 flex-shrink-0 mt-0.5" />
-                          <div className="flex-1 space-y-2">
+                        <div className="flex items-start gap-2 sm:gap-3 flex-1">
+                          <AlertTriangle className="h-4 w-4 sm:h-5 sm:w-5 text-amber-500 flex-shrink-0 mt-0.5" />
+                          <div className="flex-1 space-y-1.5 sm:space-y-2">
                             {/* Pitfall identification section */}
                             <div>
-                              <strong className="text-amber-800 text-sm">Pitfall:</strong>
-                              <p className={`text-sm ${isCompleted ? 'line-through text-green-700' : 'text-amber-700'} mt-1`}>
+                              <strong className="text-amber-800 text-xs sm:text-sm">Pitfall:</strong>
+                              <p className={`text-xs sm:text-sm ${isCompleted ? 'line-through text-green-700' : 'text-amber-700'} mt-1`}>
                                 {pitfall.pitfall}
                               </p>
                             </div>
                             {/* Prevention strategy section */}
                             <div>
-                              <strong className="text-green-800 text-sm">Prevention:</strong>
-                              <p className="text-sm text-green-700 mt-1">{pitfall.prevention}</p>
+                              <strong className="text-green-800 text-xs sm:text-sm">Prevention:</strong>
+                              <p className="text-xs sm:text-sm text-green-700 mt-1">{pitfall.prevention}</p>
                             </div>
                             {/* Recovery technique section */}
                             <div>
-                              <strong className="text-blue-800 text-sm">Recovery:</strong>
-                              <p className="text-sm text-blue-700 mt-1">{pitfall.recovery}</p>
+                              <strong className="text-blue-800 text-xs sm:text-sm">Recovery:</strong>
+                              <p className="text-xs sm:text-sm text-blue-700 mt-1">{pitfall.recovery}</p>
                             </div>
                             {/* Educational explanation section */}
                             <div>
-                              <strong className="text-gray-800 text-sm">Why it matters:</strong>
-                              <p className="text-sm text-gray-700 mt-1 italic">{pitfall.why}</p>
+                              <strong className="text-gray-800 text-xs sm:text-sm">Why it matters:</strong>
+                              <p className="text-xs sm:text-sm text-gray-700 mt-1 italic">{pitfall.why}</p>
                             </div>
                           </div>
                         </div>
@@ -557,10 +557,10 @@ export function TipPersonalizationPanel({ recipe, className }: TipPersonalizatio
         </TabsContent>
 
         {/* Visual presentation and plating techniques */}
-        <TabsContent value="presentation" className="space-y-4">
-          <div className="flex items-center gap-2 mb-4">
-            <Palette className="h-5 w-5 text-indigo-500" />
-            <h3 className="font-semibold text-lg">Presentation Tips</h3>
+        <TabsContent value="presentation" className="space-y-3 sm:space-y-4">
+          <div className="flex items-center gap-2 mb-3 sm:mb-4">
+            <Palette className="h-4 w-4 sm:h-5 sm:w-5 text-indigo-500" />
+            <h3 className="font-semibold text-sm sm:text-base md:text-lg">Presentation Tips</h3>
           </div>
           
           {dynamicTips.presentationTips && dynamicTips.presentationTips.length > 0 ? (
