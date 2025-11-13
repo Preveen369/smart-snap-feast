@@ -406,7 +406,7 @@ ${instructionsList}
               // Recipe List Item with comprehensive information display
               <Card key={recipe.id} className="overflow-hidden cursor-pointer hover:shadow-sm transition-all hover:border-orange-200" onClick={() => handleRecipeSelect(recipe)}>
                 <div className="flex flex-col sm:flex-row gap-3 p-3">
-                  <div className="relative w-full sm:w-20 h-40 sm:h-20 rounded-md overflow-hidden bg-muted flex-shrink-0">ed flex-shrink-0">
+                  <div className="relative w-full sm:w-20 h-40 sm:h-20 rounded-md overflow-hidden bg-muted flex-shrink-0">
                     {recipe.image && (
                       <img
                         src={recipe.image}
