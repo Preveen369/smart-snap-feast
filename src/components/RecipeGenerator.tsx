@@ -355,58 +355,58 @@ ${instructionsList}
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* Recipe Collection Display Section - List and Grid Views */}
       <div className="space-y-3">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between gap-2">
           <div>
-            <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
-              <Utensils className="h-5 w-5 text-orange-500" />
+            <h3 className="text-base sm:text-lg font-semibold text-foreground flex items-center gap-2">
+              <Utensils className="h-4 w-4 sm:h-5 sm:w-5 text-orange-500" />
               Your Recipes
             </h3>
-            <p className="text-sm text-muted-foreground">Delicious recipes created just for you</p>
+            <p className="text-xs sm:text-sm text-muted-foreground">Delicious recipes created just for you</p>
           </div>
           {/* View Mode Toggle - Switch between list and grid layouts */}
           <div className="flex items-center gap-0.5 bg-gray-100 rounded-lg p-0.5">
             <Button
               variant="ghost"
               size="sm"
-              className={`px-3 py-1.5 h-auto rounded-md transition-all ${
+              className={`px-2 sm:px-3 py-1.5 h-auto rounded-md transition-all ${
                 viewMode === 'list' 
                   ? 'bg-white shadow-sm text-gray-900 hover:bg-white' 
                   : 'text-gray-600 hover:text-gray-900 hover:bg-gray-200/50'
               }`}
               onClick={() => setViewMode('list')}
             >
-              <List className="h-4 w-4" />
+              <List className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
             </Button>
             <Button
               variant="ghost"
               size="sm"
-              className={`px-3 py-1.5 h-auto rounded-md transition-all ${
+              className={`px-2 sm:px-3 py-1.5 h-auto rounded-md transition-all ${
                 viewMode === 'grid' 
                   ? 'bg-white shadow-sm text-gray-900 hover:bg-white' 
                   : 'text-gray-600 hover:text-gray-900 hover:bg-gray-200/50'
               }`}
               onClick={() => setViewMode('grid')}
             >
-              <Grid3X3 className="h-4 w-4" />
+              <Grid3X3 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
             </Button>
           </div>
         </div>
         
         {/* Empty State Display */}
         {recipes.length === 0 ? (
-          <Card className="p-6 text-center">
-            <p className="text-muted-foreground text-sm">No recipes yet. Generate one to get started!</p>
+          <Card className="p-6 sm:p-8 text-center">
+            <p className="text-muted-foreground text-xs sm:text-sm">No recipes yet. Generate one to get started!</p>
           </Card>
         ) : viewMode === 'list' ? (
           <div className="space-y-3">
             {recipes.map((recipe) => (
               // Recipe List Item with comprehensive information display
               <Card key={recipe.id} className="overflow-hidden cursor-pointer hover:shadow-sm transition-all hover:border-orange-200" onClick={() => handleRecipeSelect(recipe)}>
-                <div className="flex gap-3 p-3">
-                  <div className="relative w-20 h-20 rounded-md overflow-hidden bg-muted flex-shrink-0">
+                <div className="flex flex-col sm:flex-row gap-3 p-3">
+                  <div className="relative w-full sm:w-20 h-40 sm:h-20 rounded-md overflow-hidden bg-muted flex-shrink-0">ed flex-shrink-0">
                     {recipe.image && (
                       <img
                         src={recipe.image}
@@ -414,28 +414,28 @@ ${instructionsList}
                         className="h-full w-full object-cover"
                       />
                     )}
-                    <div className="absolute top-1 right-1 bg-white/95 rounded-sm px-1 py-0.5 text-xs flex items-center gap-0.5">
+                    <div className="absolute top-1 right-1 bg-white/95 rounded-sm px-1.5 py-0.5 text-xs flex items-center gap-0.5">
                       <Clock className="h-2.5 w-2.5" />
                       {recipe.cookTime}m
                     </div>
-                    <div className="absolute bottom-1 right-1 bg-white/95 rounded-sm px-1 py-0.5 text-xs flex items-center gap-0.5">
+                    <div className="absolute bottom-1 right-1 bg-white/95 rounded-sm px-1.5 py-0.5 text-xs flex items-center gap-0.5">
                       <Users className="h-2.5 w-2.5" />
                       {recipe.servings}
                     </div>
                   </div>
                   
                   <div className="flex-1 min-w-0">
-                    <h4 className="font-medium text-foreground mb-1 text-base line-clamp-1">{recipe.title}</h4>
-                    <p className="text-sm text-muted-foreground mb-2 line-clamp-2 leading-relaxed">
+                    <h4 className="font-medium text-foreground mb-1 text-sm sm:text-base line-clamp-1">{recipe.title}</h4>
+                    <p className="text-xs sm:text-sm text-muted-foreground mb-2 line-clamp-2 leading-relaxed">
                       {recipe.description || 'Crispy on the outside and cheesy on the inside, these vegetarian potato patties are paired perfectly...'}
                     </p>
                     <div className="flex items-center gap-2 flex-wrap">
-                      <div className="flex items-center gap-1 text-sm text-muted-foreground bg-gray-100 px-2 py-0.5 rounded">
+                      <div className="flex items-center gap-1 text-xs sm:text-sm text-muted-foreground bg-gray-100 px-2 py-0.5 rounded">
                         <ChefHat className="h-3 w-3" />
                         {recipe.difficulty}
                       </div>
                       {recipe.dietaryTags.slice(0, 2).map(tag => (
-                        <Badge key={tag} variant="secondary" className="text-sm bg-orange-50 text-orange-600 border-orange-200 px-2 py-0.5">
+                        <Badge key={tag} variant="secondary" className="text-xs sm:text-sm bg-orange-50 text-orange-600 border-orange-200 px-2 py-0.5">
                           {tag}
                         </Badge>
                       ))}
@@ -445,11 +445,11 @@ ${instructionsList}
                     </div>
                   </div>
                   
-                  <div className="flex flex-col gap-1.5">
+                  <div className="flex flex-row sm:flex-col gap-1.5 justify-end">
                     <Button
                       variant="outline"
                       size="sm"
-                      className="text-xs px-3 py-1 h-auto"
+                      className="text-xs px-3 py-1.5 sm:py-1 h-auto flex-1 sm:flex-none"
                       onClick={(e) => {
                         e.stopPropagation();
                         handleRecipeSelect(recipe);
@@ -460,13 +460,14 @@ ${instructionsList}
                     <Button
                       variant="outline"
                       size="sm"
-                      className="text-destructive hover:text-destructive text-xs px-2 py-1 h-auto"
+                      className="text-destructive hover:text-destructive text-xs px-3 py-1.5 sm:px-2 sm:py-1 h-auto flex-1 sm:flex-none"
                       onClick={(e) => {
                         e.stopPropagation();
                         handleDeleteRecipe(recipe.id, recipe.title);
                       }}
                     >
-                      <Trash2 className="h-3 w-3" />
+                      <Trash2 className="h-3 w-3 sm:mr-0" />
+                      <span className="sm:hidden ml-1">Delete</span>
                     </Button>
                   </div>
                 </div>
@@ -475,7 +476,7 @@ ${instructionsList}
           </div>
         ) : (
           // Recipe Grid Layout for visual browsing
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-2">
             {recipes.map((recipe) => (
               // Compact Recipe Card for grid display
               <Card key={recipe.id} className="overflow-hidden cursor-pointer hover:shadow-sm transition-all hover:border-orange-200" onClick={() => handleRecipeSelect(recipe)}>
@@ -498,7 +499,7 @@ ${instructionsList}
                 </div>
                 
                 <div className="p-3">
-                  <h4 className="font-medium text-foreground mb-1 text-sm line-clamp-1">{recipe.title}</h4>
+                  <h4 className="font-medium text-foreground mb-1 text-xs sm:text-sm line-clamp-1">{recipe.title}</h4>
                   <p className="text-xs text-muted-foreground mb-3 line-clamp-2 leading-relaxed">
                     {recipe.description || 'Crispy on the outside and cheesy on the inside, these vegetarian potato patties are paired perfectly...'}
                   </p>
@@ -551,14 +552,14 @@ ${instructionsList}
       {/* Interactive Recipe Detail Modal - Full cooking experience */}
       {selectedRecipe && (
         <Dialog open={!!selectedRecipe} onOpenChange={() => setSelectedRecipe(null)}>
-          <DialogContent className="max-w-4xl max-h-[85vh] overflow-y-auto">
+          <DialogContent className="max-w-[95vw] sm:max-w-[90vw] md:max-w-4xl max-h-[90vh] sm:max-h-[85vh] overflow-y-auto">
             <DialogHeader className="pb-3">
-              <DialogTitle className="text-xl font-semibold">{selectedRecipe.title}</DialogTitle>
+              <DialogTitle className="text-lg sm:text-xl font-semibold pr-8">{selectedRecipe.title}</DialogTitle>
             </DialogHeader>
             
             <div className="space-y-4">
               {/* Hero Recipe Image Display */}
-              <div className="aspect-[3/1] w-full overflow-hidden rounded-lg bg-muted relative">
+              <div className="aspect-video sm:aspect-[3/1] w-full overflow-hidden rounded-lg bg-muted relative">
                 {selectedRecipe.image && (
                   <img
                     src={selectedRecipe.image}
@@ -569,29 +570,29 @@ ${instructionsList}
               </div>
 
               {/* Recipe Metadata and Description */}
-              <p className="text-muted-foreground">
+              <p className="text-xs sm:text-sm text-muted-foreground">
                 {selectedRecipe.description || 'A delicious recipe created with your ingredients.'}
               </p>
 
               {/* Recipe Quick Stats Grid */}
-              <div className="grid grid-cols-3 gap-3 p-3 bg-orange-50 rounded-lg">
+              <div className="grid grid-cols-3 gap-2 sm:gap-3 p-3 bg-orange-50 rounded-lg">
                 <div className="text-center">
                   <div className="flex items-center justify-center gap-1 text-orange-600 mb-1">
-                    <Clock className="h-3 w-3" />
+                    <Clock className="h-3 w-3 sm:h-4 sm:w-4" />
                   </div>
-                  <p className="font-medium text-sm">{selectedRecipe.cookTime} min</p>
+                  <p className="font-medium text-xs sm:text-sm">{selectedRecipe.cookTime} min</p>
                 </div>
                 <div className="text-center">
                   <div className="flex items-center justify-center gap-1 text-orange-600 mb-1">
-                    <Users className="h-3 w-3" />
+                    <Users className="h-3 w-3 sm:h-4 sm:w-4" />
                   </div>
-                  <p className="font-medium text-sm">{servings} servings</p>
+                  <p className="font-medium text-xs sm:text-sm">{servings} servings</p>
                 </div>
                 <div className="text-center">
                   <div className="flex items-center justify-center gap-1 text-orange-600 mb-1">
-                    <ChefHat className="h-3 w-3" />
+                    <ChefHat className="h-3 w-3 sm:h-4 sm:w-4" />
                   </div>
-                  <p className="font-medium text-sm capitalize">{selectedRecipe.difficulty}</p>
+                  <p className="font-medium text-xs sm:text-sm capitalize">{selectedRecipe.difficulty}</p>
                 </div>
               </div>
 
@@ -605,14 +606,14 @@ ${instructionsList}
                 <TabsContent value="recipe" className="space-y-4">
                   {/* Interactive Ingredients Checklist Section */}
                   <div>
-                    <div className="flex items-center justify-between mb-3">
-                      <h4 className="font-medium text-base flex items-center gap-2">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-3 gap-2">
+                      <h4 className="font-medium text-sm sm:text-base flex items-center gap-2">
                         🥘 Interactive Ingredients
-                        <span className="text-sm text-muted-foreground">({checkedIngredients.size}/{selectedRecipe.ingredients.length})</span>
+                        <span className="text-xs sm:text-sm text-muted-foreground">({checkedIngredients.size}/{selectedRecipe.ingredients.length})</span>
                       </h4>
                       {/* Quantity Adjustment Controls */}
                       <div className="flex items-center gap-2">
-                        <span className="text-xs text-muted-foreground">Adjust quantities:</span>
+                        <span className="text-xs text-muted-foreground hidden sm:inline">Adjust quantities:</span>
                         <div className="flex items-center bg-gray-100 rounded-lg p-0.5">
                           <button
                             onClick={() => setIngredientQuantityMultiplier(0.5)}
@@ -662,7 +663,7 @@ ${instructionsList}
                               </button>
                               
                               <div className="flex-1">
-                                <span className={`text-sm font-medium ${
+                                <span className={`text-xs sm:text-sm font-medium ${
                                   isChecked ? 'line-through text-green-700' : 'text-gray-800'
                                 }`}>
                                   {calculateAdjustedQuantity(ingredient.quantity)} {ingredient.unit} {ingredient.name}
@@ -676,7 +677,7 @@ ${instructionsList}
                       {/* Completion Celebration Message */}
                       {checkedIngredients.size === selectedRecipe.ingredients.length && (
                         <div className="mt-4 p-3 bg-green-100 border border-green-300 rounded-lg text-center">
-                          <span className="text-green-700 font-medium">🎉 All ingredients ready! Time to cook!</span>
+                          <span className="text-green-700 font-medium text-xs sm:text-sm">🎉 All ingredients ready! Time to cook!</span>
                         </div>
                       )}
                     </div>
@@ -684,10 +685,10 @@ ${instructionsList}
 
                   {/* Interactive Cooking Instructions Section */}
                   <div>
-                    <div className="flex items-center justify-between mb-3">
-                      <h4 className="font-medium text-base flex items-center gap-2">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-3 gap-2">
+                      <h4 className="font-medium text-sm sm:text-base flex items-center gap-2">
                         👨‍🍳 Step-by-Step Instructions
-                        <span className="text-sm text-muted-foreground">({completedSteps.size}/{selectedRecipe.instructions.length})</span>
+                        <span className="text-xs sm:text-sm text-muted-foreground">({completedSteps.size}/{selectedRecipe.instructions.length})</span>
                       </h4>
                       {/* Cooking Mode Toggle for Focused Experience */}
                       <div className="flex items-center gap-2">
@@ -785,7 +786,7 @@ ${instructionsList}
                               </div>
                               
                               <div className="flex-1">
-                                <p className={`text-sm leading-relaxed mb-2 font-semibold ${
+                                <p className={`text-xs sm:text-sm leading-relaxed mb-2 font-semibold ${
                                   isCompleted ? 'line-through text-green-700' : 'text-gray-800'
                                 }`}>
                                   {instruction}
@@ -832,8 +833,8 @@ ${instructionsList}
                       {completedSteps.size === selectedRecipe.instructions.length && (
                         <div className="mt-6 p-4 bg-gradient-to-r from-green-100 to-emerald-100 border border-green-300 rounded-xl text-center">
                           <div className="text-2xl mb-2">🎉</div>
-                          <h5 className="font-semibold text-green-800 mb-1">Congratulations!</h5>
-                          <p className="text-green-700 text-sm">You've completed all cooking steps. Enjoy your delicious meal!</p>
+                          <h5 className="font-semibold text-green-800 mb-1 text-sm sm:text-base">Congratulations!</h5>
+                          <p className="text-green-700 text-xs sm:text-sm">You've completed all cooking steps. Enjoy your delicious meal!</p>
                         </div>
                       )}
                     </div>
@@ -847,9 +848,9 @@ ${instructionsList}
               </Tabs>
 
               {/* Recipe Action Controls */}
-              <div className="flex gap-3 pt-4 border-t">
+              <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t">
                 <div className="flex items-center gap-2">
-                  <span className="text-sm">Servings</span>
+                  <span className="text-xs sm:text-sm">Servings</span>
                   <Select value={servings.toString()} onValueChange={(value) => setServings(parseInt(value))}>
                     <SelectTrigger className="w-20">
                       <SelectValue />
@@ -863,10 +864,10 @@ ${instructionsList}
                     </SelectContent>
                   </Select>
                 </div>
-                <Button className="bg-orange-500 hover:bg-orange-600 text-white">
+                <Button className="bg-orange-500 hover:bg-orange-600 text-white text-sm sm:text-base">
                   Save Recipe
                 </Button>
-                <Button variant="outline" onClick={() => setIsShareModalOpen(true)}>
+                <Button variant="outline" onClick={() => setIsShareModalOpen(true)} className="text-sm sm:text-base">
                   <Share2 className="h-4 w-4 mr-2" />
                   Share Recipe
                 </Button>
@@ -879,9 +880,9 @@ ${instructionsList}
       {/* Comprehensive Recipe Sharing Modal */}
       {selectedRecipe && (
         <Dialog open={isShareModalOpen} onOpenChange={setIsShareModalOpen}>
-          <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
+          <DialogContent className="max-w-[95vw] sm:max-w-[90vw] md:max-w-2xl max-h-[90vh] sm:max-h-[85vh] overflow-y-auto">
             <DialogHeader className="pb-4">
-              <DialogTitle className="text-lg flex items-center gap-2">
+              <DialogTitle className="text-base sm:text-lg flex items-center gap-2 pr-8">
                 <Share2 className="h-5 w-5 text-orange-500" />
                 Share Recipe: {selectedRecipe.title}
               </DialogTitle>
@@ -889,34 +890,34 @@ ${instructionsList}
             
             <div className="space-y-6">
               {/* Recipe Preview Card for Sharing */}
-              <div className="border rounded-lg p-4 bg-gray-50">
-                <div className="bg-white rounded-lg p-4 border shadow-sm">
-                  <div className="flex items-start gap-3 mb-3">
+              <div className="border rounded-lg p-3 sm:p-4 bg-gray-50">
+                <div className="bg-white rounded-lg p-3 sm:p-4 border shadow-sm">
+                  <div className="flex items-start gap-2 sm:gap-3 mb-3">
                     {selectedRecipe.image && (
                       <img
                         src={selectedRecipe.image}
                         alt={selectedRecipe.title}
-                        className="w-16 h-16 rounded-lg object-cover"
+                        className="w-12 h-12 sm:w-16 sm:h-16 rounded-lg object-cover"
                       />
                     )}
-                    <div className="flex-1">
-                      <h5 className="font-semibold text-gray-900">{selectedRecipe.title}</h5>
-                      <p className="text-sm text-gray-600 mt-1 line-clamp-2">
+                    <div className="flex-1 min-w-0">
+                      <h5 className="font-semibold text-gray-900 text-sm sm:text-base">{selectedRecipe.title}</h5>
+                      <p className="text-xs sm:text-sm text-gray-600 mt-1 line-clamp-2">
                         {selectedRecipe.description || 'A delicious recipe created with Smart Snap Feast'}
                       </p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-4 text-sm text-gray-600">
+                  <div className="flex items-center gap-3 sm:gap-4 text-xs sm:text-sm text-gray-600 flex-wrap">
                     <span className="flex items-center gap-1">
-                      <Clock className="h-3 w-3" />
+                      <Clock className="h-2.5 w-2.5 sm:h-3 sm:w-3" />
                       {selectedRecipe.cookTime}m
                     </span>
                     <span className="flex items-center gap-1">
-                      <Users className="h-3 w-3" />
+                      <Users className="h-2.5 w-2.5 sm:h-3 sm:w-3" />
                       {selectedRecipe.servings}
                     </span>
                     <span className="flex items-center gap-1">
-                      <ChefHat className="h-3 w-3" />
+                      <ChefHat className="h-2.5 w-2.5 sm:h-3 sm:w-3" />
                       {selectedRecipe.difficulty}
                     </span>
                   </div>
@@ -932,72 +933,72 @@ ${instructionsList}
 
               {/* Multi-Platform Sharing Options */}
               <div className="space-y-4">
-                <h4 className="font-medium text-gray-900">Share Options</h4>
+                <h4 className="font-medium text-gray-900 text-sm sm:text-base">Share Options</h4>
                 
                 {/* Quick Copy and Download Actions */}
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
                   <Button
                     variant="outline"
-                    className="h-auto p-3 justify-start"
+                    className="h-auto p-3 justify-start text-left"
                     onClick={() => handleShareRecipe('copy')}
                   >
-                    <Copy className="h-4 w-4 mr-3 text-blue-500" />
+                    <Copy className="h-4 w-4 mr-2 sm:mr-3 text-blue-500 flex-shrink-0" />
                     <div className="text-left">
-                      <div className="font-medium text-sm">Copy to Clipboard</div>
-                      <div className="text-xs text-muted-foreground">Copy recipe text</div>
+                      <div className="font-medium text-xs sm:text-sm">Copy to Clipboard</div>
+                      <div className="text-xs text-muted-foreground hidden sm:block">Copy recipe text</div>
                     </div>
                   </Button>
                   
                   <Button
                     variant="outline"
-                    className="h-auto p-3 justify-start"
+                    className="h-auto p-3 justify-start text-left"
                     onClick={() => handleShareRecipe('download')}
                   >
-                    <Download className="h-4 w-4 mr-3 text-green-500" />
+                    <Download className="h-4 w-4 mr-2 sm:mr-3 text-green-500 flex-shrink-0" />
                     <div className="text-left">
-                      <div className="font-medium text-sm">Download</div>
-                      <div className="text-xs text-muted-foreground">Save as text file</div>
+                      <div className="font-medium text-xs sm:text-sm">Download</div>
+                      <div className="text-xs text-muted-foreground hidden sm:block">Save as text file</div>
                     </div>
                   </Button>
                 </div>
 
                 {/* Communication Platform Integration */}
                 <div className="space-y-2">
-                  <h5 className="font-medium text-sm text-gray-700">Share via Apps</h5>
+                  <h5 className="font-medium text-xs sm:text-sm text-gray-700">Share via Apps</h5>
                   <div className="grid grid-cols-1 gap-2">
                     <Button
                       variant="ghost"
-                      className="justify-start h-auto p-3 hover:bg-blue-50"
+                      className="justify-start h-auto p-3 hover:bg-blue-50 text-left"
                       onClick={() => handleShareRecipe('email')}
                     >
-                      <Mail className="h-4 w-4 mr-3 text-blue-600" />
+                      <Mail className="h-4 w-4 mr-2 sm:mr-3 text-blue-600 flex-shrink-0" />
                       <div className="text-left">
-                        <div className="font-medium text-sm">Email</div>
-                        <div className="text-xs text-muted-foreground">Send via email app</div>
+                        <div className="font-medium text-xs sm:text-sm">Email</div>
+                        <div className="text-xs text-muted-foreground hidden sm:block">Send via email app</div>
                       </div>
                     </Button>
                     
                     <Button
                       variant="ghost"
-                      className="justify-start h-auto p-3 hover:bg-green-50"
+                      className="justify-start h-auto p-3 hover:bg-green-50 text-left"
                       onClick={() => handleShareRecipe('whatsapp')}
                     >
-                      <MessageCircle className="h-4 w-4 mr-3 text-green-600" />
+                      <MessageCircle className="h-4 w-4 mr-2 sm:mr-3 text-green-600 flex-shrink-0" />
                       <div className="text-left">
-                        <div className="font-medium text-sm">WhatsApp</div>
-                        <div className="text-xs text-muted-foreground">Share on WhatsApp</div>
+                        <div className="font-medium text-xs sm:text-sm">WhatsApp</div>
+                        <div className="text-xs text-muted-foreground hidden sm:block">Share on WhatsApp</div>
                       </div>
                     </Button>
                     
                     <Button
                       variant="ghost"
-                      className="justify-start h-auto p-3 hover:bg-gray-50"
+                      className="justify-start h-auto p-3 hover:bg-gray-50 text-left"
                       onClick={() => handleShareRecipe('sms')}
                     >
-                      <MessageCircle className="h-4 w-4 mr-3 text-gray-600" />
+                      <MessageCircle className="h-4 w-4 mr-2 sm:mr-3 text-gray-600 flex-shrink-0" />
                       <div className="text-left">
-                        <div className="font-medium text-sm">SMS</div>
-                        <div className="text-xs text-muted-foreground">Send as text message</div>
+                        <div className="font-medium text-xs sm:text-sm">SMS</div>
+                        <div className="text-xs text-muted-foreground hidden sm:block">Send as text message</div>
                       </div>
                     </Button>
                   </div>
@@ -1005,29 +1006,29 @@ ${instructionsList}
 
                 {/* Social Media Platform Integration */}
                 <div className="space-y-2">
-                  <h5 className="font-medium text-sm text-gray-700">Social Media</h5>
-                  <div className="grid grid-cols-2 gap-2">
+                  <h5 className="font-medium text-xs sm:text-sm text-gray-700">Social Media</h5>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     <Button
                       variant="ghost"
-                      className="justify-start h-auto p-3 hover:bg-blue-50"
+                      className="justify-start h-auto p-3 hover:bg-blue-50 text-left"
                       onClick={() => handleShareRecipe('twitter')}
                     >
-                      <Twitter className="h-4 w-4 mr-3 text-blue-500" />
+                      <Twitter className="h-4 w-4 mr-2 sm:mr-3 text-blue-500 flex-shrink-0" />
                       <div className="text-left">
-                        <div className="font-medium text-sm">Twitter</div>
-                        <div className="text-xs text-muted-foreground">Tweet recipe</div>
+                        <div className="font-medium text-xs sm:text-sm">Twitter</div>
+                        <div className="text-xs text-muted-foreground hidden sm:block">Tweet recipe</div>
                       </div>
                     </Button>
                     
                     <Button
                       variant="ghost"
-                      className="justify-start h-auto p-3 hover:bg-blue-50"
+                      className="justify-start h-auto p-3 hover:bg-blue-50 text-left"
                       onClick={() => handleShareRecipe('facebook')}
                     >
-                      <Facebook className="h-4 w-4 mr-3 text-blue-600" />
+                      <Facebook className="h-4 w-4 mr-2 sm:mr-3 text-blue-600 flex-shrink-0" />
                       <div className="text-left">
-                        <div className="font-medium text-sm">Facebook</div>
-                        <div className="text-xs text-muted-foreground">Share on Facebook</div>
+                        <div className="font-medium text-xs sm:text-sm">Facebook</div>
+                        <div className="text-xs text-muted-foreground hidden sm:block">Share on Facebook</div>
                       </div>
                     </Button>
                   </div>

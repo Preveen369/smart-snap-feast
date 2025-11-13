@@ -97,15 +97,15 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 pb-20">
-      <div className="container mx-auto px-6 py-8">
-        <div className="mb-8">
+      <div className="container mx-auto px-4 sm:px-6 py-4 sm:py-8 max-w-7xl">
+        <div className="mb-6 sm:mb-8">
           <div className="flex items-center gap-3 mb-2">
-            <div className="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center">
-              <ChefHat className="w-5 h-5 text-white" />
+            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-orange-500 rounded-lg flex items-center justify-center">
+              <ChefHat className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-foreground">Smart Snap Feast</h1>
-              <p className="text-sm text-muted-foreground">
+              <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-foreground">Smart Snap Feast</h1>
+              <p className="text-xs sm:text-sm text-muted-foreground">
                 AI-powered cooking assistant for your kitchen
                 {firebaseLoading && ' • Syncing...'}
               </p>
@@ -113,7 +113,7 @@ const Index = () => {
           </div>
         </div>
 
-        <div className="grid lg:grid-cols-[350px_1fr] gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-[350px_1fr] gap-4 sm:gap-6 lg:gap-8">
           <div>
             <IngredientScanner
               ingredients={ingredients}

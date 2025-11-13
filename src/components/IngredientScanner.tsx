@@ -141,16 +141,16 @@ export function IngredientScanner({ ingredients, onAddIngredient, onRemoveIngred
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* Pantry Management Section - Ingredient input and display */}
-      <Card className="p-4">
+      <Card className="p-3 sm:p-4">m:p-4">
         <div className="space-y-3">
           {/* Section header with descriptive icon and title */}
           <div className="flex items-center gap-2">
-            <Package className="h-5 w-5 text-orange-500" />
-            <h2 className="text-lg font-semibold text-black">My Pantry</h2>
+            <Package className="h-4 w-4 sm:h-5 sm:w-5 text-orange-500" />
+            <h2 className="text-base sm:text-lg font-semibold text-black">My Pantry</h2>
           </div>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-xs sm:text-sm text-muted-foreground">
             Add ingredients manually or from AI scan
           </p>
 
@@ -161,12 +161,12 @@ export function IngredientScanner({ ingredients, onAddIngredient, onRemoveIngred
               onChange={(e) => setInputValue(e.target.value)}
               onKeyPress={handleKeyPress}
               placeholder="Add ingredient..."
-              className="flex-1"
+              className="flex-1 text-sm sm:text-base"
             />
             <Button 
               onClick={handleAdd} 
               size="icon"
-              className="bg-orange-500 hover:bg-orange-600 shrink-0"
+              className="bg-orange-500 hover:bg-orange-600 shrink-0 h-9 w-9 sm:h-10 sm:w-10"
             >
               <Plus className="h-4 w-4" />
             </Button>
@@ -175,26 +175,26 @@ export function IngredientScanner({ ingredients, onAddIngredient, onRemoveIngred
           {/* Dynamic ingredient list display with empty state */}
           <div className="space-y-1">
             {ingredients.length === 0 ? (
-              <div className="py-4 text-center">
-                <p className="text-muted-foreground text-sm">No ingredients yet. Add some to get started!</p>
+              <div className="py-6 sm:py-4 text-center">
+                <p className="text-muted-foreground text-xs sm:text-sm">No ingredients yet. Add some to get started!</p>
               </div>
             ) : (
               ingredients.map((ingredient) => (
-                <div key={ingredient.id} className="flex items-center gap-3 p-1.5 rounded hover:bg-muted/50">
-                  <Checkbox id={ingredient.id} defaultChecked />
+                <div key={ingredient.id} className="flex items-center gap-2 sm:gap-3 p-2 sm:p-1.5 rounded hover:bg-muted/50">
+                  <Checkbox id={ingredient.id} defaultChecked className="h-4 w-4 sm:h-5 sm:w-5" />
                   <label 
                     htmlFor={ingredient.id} 
-                    className="flex-1 text-sm cursor-pointer"
+                    className="flex-1 text-xs sm:text-sm cursor-pointer"
                   >
                     {ingredient.name}
                   </label>
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="h-6 w-6 text-muted-foreground hover:text-destructive"
+                    className="h-7 w-7 sm:h-6 sm:w-6 text-muted-foreground hover:text-destructive"
                     onClick={() => onRemoveIngredient(ingredient.id)}
                   >
-                    <Trash2 className="h-3 w-3" />
+                    <Trash2 className="h-3.5 w-3.5 sm:h-3 sm:w-3" />
                   </Button>
                 </div>
               ))
@@ -204,24 +204,25 @@ export function IngredientScanner({ ingredients, onAddIngredient, onRemoveIngred
       </Card>
 
       {/* Recipe Generation Controls - Preferences and parameters */}
-      <Card className="p-4">
+      <Card className="p-3 sm:p-4">
         <div className="space-y-4">
           {/* Dietary Preferences Selection Grid */}
           <div className="space-y-3">
-            <h3 className="text-lg font-semibold flex items-center gap-2">
-              <Leaf className="h-5 w-5 text-green-500" />
+            <h3 className="text-base sm:text-lg font-semibold flex items-center gap-2">
+              <Leaf className="h-4 w-4 sm:h-5 sm:w-5 text-green-500" />
               Dietary Preferences
             </h3>
             {/* Grid layout for dietary options with checkboxes */}
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2">-cols-2 gap-2 sm:gap-2">
               {dietaryOptions.map((option) => (
                 <div key={option} className="flex items-center space-x-2">
                   <Checkbox 
                     id={option}
                     checked={selectedDietary.includes(option)}
                     onCheckedChange={(checked) => handleDietaryChange(option, checked as boolean)}
+                    className="h-4 w-4 sm:h-5 sm:w-5"
                   />
-                  <label htmlFor={option} className="text-sm cursor-pointer capitalize">
+                  <label htmlFor={option} className="text-xs sm:text-sm cursor-pointer capitalize">
                     {option.replace('-', ' ')}
                   </label>
                 </div>
@@ -232,10 +233,10 @@ export function IngredientScanner({ ingredients, onAddIngredient, onRemoveIngred
           {/* Recipe Generation Controls - Time and difficulty constraints */}
           <div className="space-y-3">
             {/* Two-column grid for cooking parameters */}
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {/* Maximum cooking time selector */}
               <div>
-                <label className="text-sm font-medium text-foreground mb-1 block">Max Cook Time</label>
+                <label className="text-xs sm:text-sm font-medium text-foreground mb-1 block">Max Cook Time</label>
                 <Select value={maxTime} onValueChange={setMaxTime}>
                   <SelectTrigger>
                     <SelectValue />
@@ -251,7 +252,7 @@ export function IngredientScanner({ ingredients, onAddIngredient, onRemoveIngred
 
               {/* Recipe difficulty level selector */}
               <div>
-                <label className="text-sm font-medium text-foreground mb-1 block">Difficulty</label>
+                <label className="text-xs sm:text-sm font-medium text-foreground mb-1 block">Difficulty</label>
                 <Select value={difficulty} onValueChange={setDifficulty}>
                   <SelectTrigger>
                     <SelectValue />
@@ -269,7 +270,7 @@ export function IngredientScanner({ ingredients, onAddIngredient, onRemoveIngred
             <Button 
               onClick={generateRecipe} 
               disabled={isGenerating} 
-              className="w-full bg-orange-500 hover:bg-orange-600"
+              className="w-full bg-orange-500 hover:bg-orange-600 h-10 sm:h-11 text-sm sm:text-base"
             >
               <Sparkles className="mr-2 h-4 w-4" />
               {isGenerating ? 'Generating...' : 'Generate AI Recipe'}
